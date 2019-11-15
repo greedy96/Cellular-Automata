@@ -1,0 +1,20 @@
+GridPane {
+    -fx-pref-width: 920px;
+    -fx-pref-height: 690px;
+    -fx-font-size: 16px;
+}
+
+SplitPane {
+    -fx-pref-width: 880px;
+    -fx-pref-height: 660px;
+}
+
+.boardPane {
+    -fx-pref-width: 660px;
+    -fx-pref-height: 660px;
+}
+
+.dboardPane {
+    -fx-pref-width: 640px;
+    -fx-pref-height: 640px;
+}

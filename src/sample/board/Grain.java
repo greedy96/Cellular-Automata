@@ -1,17 +1,27 @@
 package sample.board;
 
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Random;
 
 public class Grain {
 
     private int id;
     private int startStep;
-    private String color;
+    private Paint color;
     private Neighbourhood neighbourhood;
 
-    public Grain(int id, int startStep, Neighbourhood neighbourhood) {
+    public Grain(int id, int startStep, Paint color, Neighbourhood neighbourhood) {
         this.id = id;
         this.startStep = startStep;
+        if (color == null) {
+            this.color = generateColor();
+        } else {
+            this.color = color;
+        }
         this.neighbourhood = neighbourhood;
     }
 
@@ -23,16 +33,26 @@ public class Grain {
         return startStep;
     }
 
-    public String getColor() {
+    public Paint getColor() {
         return color;
     }
 
     public boolean checkNeighbourhood(int positionX, int positionY) {
+        System.out.println(Arrays.deepToString(neighbourhood.getMatrix()));
         return neighbourhood.getMatrix()[positionX + 1][positionY + 1];
     }
 
     public Grain copy(int startStep) {
-        return new Grain(id, startStep, neighbourhood);
+        return new Grain(id, startStep, color, neighbourhood);
+    }
+
+    private Color generateColor() {
+        Random random = new Random();
+
+        float r = random.nextFloat();
+        float g = random.nextFloat();
+        float b = random.nextFloat();
+        return new Color(r, g, b, 1);
     }
 
     public String toString() {

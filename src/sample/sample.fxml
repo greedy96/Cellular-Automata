@@ -1,8 +1,53 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<GridPane fx:controller="sample.Controller"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="center" hgap="10" stylesheets="@styles.css" vgap="10"
+          xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="sample.Controller">
+    <children>
+        <SplitPane fx:id="splitPane" dividerPositions="0.75, 0.5">
+            <items>
+                <AnchorPane styleClass="boardPane">
+                    <children>
+                        <ScrollPane styleClass="boardPane">
+                            <content>
+                                <AnchorPane fx:id="boardView" styleClass="dboardPane"/>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </AnchorPane>
+                <AnchorPane fx:id="controlPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="200.0">
+                    <children>
+                        <ComboBox fx:id="neighbourhood" layoutX="37.0" layoutY="140.0" prefWidth="150.0"/>
+                        <TextField fx:id="rowsTextField" layoutX="28.0" layoutY="66.0"/>
+                        <TextField fx:id="columnsTextField" layoutX="28.0" layoutY="29.0"/>
+                        <TextField fx:id="numberOfSeeds" layoutX="29.0" layoutY="100.0"/>
+                        <RadioButton fx:id="nonPeriodicBoundary" layoutX="39.0" layoutY="227.0" mnemonicParsing="false"
+                                     text="Non-periodic boundary"/>
+                        <RadioButton fx:id="periodicBoundary" layoutX="39.0" layoutY="200.0" mnemonicParsing="false"
+                                     text="Periodic boundary"/>
+                        <Button layoutX="96.0" layoutY="318.0" mnemonicParsing="false" onAction="#generateBoard"
+                                text="Button"/>
+                    </children>
+                </AnchorPane>
+                <AnchorPane fx:id="activeControlPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0"
+                            prefWidth="200.0">
+                    <children>
+                        <Button layoutX="96.0" layoutY="318.0" mnemonicParsing="false" onAction="#generateNextStep"
+                                text="Button"/>
+                        <Button layoutX="166.0" layoutY="318.0" mnemonicParsing="false" onAction="#goBack"
+                                text="Button"/>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+    <columnConstraints>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+    </rowConstraints>
 </GridPane>

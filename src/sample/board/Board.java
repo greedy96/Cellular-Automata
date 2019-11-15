@@ -17,6 +17,14 @@ public class Board {
         this.matrix = new Grain[rows][columns];
     }
 
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
     public int getStep() {
         return step;
     }
@@ -25,7 +33,7 @@ public class Board {
         return matrix;
     }
 
-    public void setRandomGrains(int number) {
+    public void setRandomGrains(int number, NeighbourhoodEnum neighbourhoodEnum) {
         int i = 0;
         Random random = new Random();
         int x, y;
@@ -33,7 +41,7 @@ public class Board {
             x = random.nextInt(rows);
             y = random.nextInt(columns);
             if (matrix[x][y] == null) {
-                matrix[x][y] = new Grain(i, step, new Neighbourhood(NeighbourhoodEnum.VON_NEUMANN));
+                matrix[x][y] = new Grain(i, step, null, new Neighbourhood(neighbourhoodEnum));
                 i++;
             }
         }
@@ -90,7 +98,7 @@ public class Board {
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
             if (grainList.size() > 1) {
-                grain = grainList.get(new Random().nextInt());
+                grain = grainList.get(new Random().nextInt(grainList.size()));
             } else {
                 grain = grainList.get(0);
             }
