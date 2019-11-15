@@ -17,9 +17,11 @@ public class BoardController {
 
     private Board board;
     private int currentStep;
+    private boolean periodicBoundary;
 
-    public BoardController(int rows, int columns, int numberOfSeeds, NeighbourhoodEnum neighbourhoodEnum) {
-        board = new Board(rows, columns);
+    public BoardController(int rows, int columns, int numberOfSeeds, NeighbourhoodEnum neighbourhoodEnum, boolean periodicBoundary) {
+        board = new Board(rows, columns, periodicBoundary);
+        this.periodicBoundary = periodicBoundary;
         currentStep = 0;
         board.setRandomGrains(numberOfSeeds, neighbourhoodEnum);
     }
@@ -91,7 +93,7 @@ public class BoardController {
                 int step = Integer.parseInt(boardString[2]);
                 NeighbourhoodEnum neighbourhoodEnum = NeighbourhoodEnum.valueOf(boardString[3]);
 
-                board = new Board(rows, columns);
+                board = new Board(rows, columns, periodicBoundary);
                 board.setStep(step);
 
                 Neighbourhood neighbourhood = new Neighbourhood(neighbourhoodEnum);

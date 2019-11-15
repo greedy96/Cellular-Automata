@@ -59,7 +59,7 @@ public class Controller {
             int rows = Integer.parseInt(rowsTextField.getText());
             int columns = Integer.parseInt(columnsTextField.getText());
             int numberOfSeeds = Integer.parseInt(this.numberOfSeeds.getText());
-            boardController = new BoardController(rows, columns, numberOfSeeds, neighbourhood.getValue());
+            boardController = new BoardController(rows, columns, numberOfSeeds, neighbourhood.getValue(), periodicBoundary.isSelected());
             addBoardView(this.boardController.getCurrentView());
             splitPane.getItems().remove(controlPane);
             splitPane.getItems().add(activeControlPane);
