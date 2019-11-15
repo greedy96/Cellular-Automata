@@ -14,7 +14,7 @@ SplitPane {
     -fx-pref-height: 660px;
 }
 
-.dboardPane {
+.boardView {
     -fx-pref-width: 640px;
     -fx-pref-height: 640px;
 }

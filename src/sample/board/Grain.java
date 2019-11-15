@@ -1,9 +1,7 @@
 package sample.board;
 
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
@@ -11,10 +9,10 @@ public class Grain {
 
     private int id;
     private int startStep;
-    private Paint color;
+    private Color color;
     private Neighbourhood neighbourhood;
 
-    public Grain(int id, int startStep, Paint color, Neighbourhood neighbourhood) {
+    public Grain(int id, int startStep, Color color, Neighbourhood neighbourhood) {
         this.id = id;
         this.startStep = startStep;
         if (color == null) {
@@ -33,12 +31,11 @@ public class Grain {
         return startStep;
     }
 
-    public Paint getColor() {
+    public Color getColor() {
         return color;
     }
 
     public boolean checkNeighbourhood(int positionX, int positionY) {
-        System.out.println(Arrays.deepToString(neighbourhood.getMatrix()));
         return neighbourhood.getMatrix()[positionX + 1][positionY + 1];
     }
 

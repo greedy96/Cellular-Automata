@@ -8,6 +8,7 @@ public class Board {
     private int step, lastStep;
     private int rows, columns;
     private Grain[][] matrix;
+    private NeighbourhoodEnum neighbourhoodEnum;
 
     public Board(int rows, int columns) {
         this.step = 0;
@@ -29,11 +30,20 @@ public class Board {
         return step;
     }
 
+    public int getLastStep() {
+        return lastStep;
+    }
+
     public Grain[][] getMatrix() {
         return matrix;
     }
 
+    public void setStep(int step) {
+        this.step = step;
+    }
+
     public void setRandomGrains(int number, NeighbourhoodEnum neighbourhoodEnum) {
+        this.neighbourhoodEnum = neighbourhoodEnum;
         int i = 0;
         Random random = new Random();
         int x, y;
@@ -104,5 +114,9 @@ public class Board {
             }
         }
         return grain;
+    }
+
+    public NeighbourhoodEnum getNeighbourhoodEnum() {
+        return neighbourhoodEnum;
     }
 }
