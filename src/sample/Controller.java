@@ -1,6 +1,8 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -41,6 +43,8 @@ public class Controller {
 
     @FXML
     private AnchorPane boardView;
+
+    private Thread autoTask = null;
 
     @FXML
     public void initialize() {
@@ -86,11 +90,47 @@ public class Controller {
     public void goBack() {
         splitPane.getItems().remove(activeControlPane);
         splitPane.getItems().add(controlPane);
+        if(autoTask!=null){
+            autoTask.interrupt();
+            autoTask = null;
+        }
     }
 
     private void addBoardView(AnchorPane anchorPane) {
         boardView.getChildren().remove(0, boardView.getChildren().size());
         boardView.getChildren().add(anchorPane);
+    }
+
+    @FXML
+    public void playAuto(){
+        if(autoTask==null) {
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    AnchorPane view = boardController.getNextView();
+                    while (view != null) {
+                        final AnchorPane viewTMP = view;
+                        Platform.runLater(() -> addBoardView(viewTMP));
+
+                        Thread.sleep(1000);
+                        view = boardController.getNextView();
+                    }
+                    return 1;
+                }
+            };
+
+            autoTask = new Thread(task);
+            autoTask.start();
+        }
+    }
+
+    @FXML
+    public void pauseAuto(){
+        if(autoTask!=null){
+            autoTask.interrupt();
+            autoTask = null;
+        }
+
     }
 
     @FXML

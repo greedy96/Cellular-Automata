@@ -25,6 +25,10 @@
                                 text="Next"/>
                         <Button layoutX="13.0" layoutY="349.0" mnemonicParsing="false" onAction="#getPreviousStep"
                                 text="Previous"/>
+                        <Button layoutX="126.0" layoutY="549.0" mnemonicParsing="false" onAction="#playAuto"
+                                text="Auto"/>
+                        <Button layoutX="13.0" layoutY="549.0" mnemonicParsing="false" onAction="#pauseAuto"
+                                text="Pause"/>
                         <Button layoutX="81.0" layoutY="428.0" mnemonicParsing="false" onAction="#goBack" text="Reset"/>
                         <Button layoutX="59.0" layoutY="190.0" mnemonicParsing="false" onAction="#saveToFile"
                                 text="Save to file"/>
