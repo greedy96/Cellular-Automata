@@ -90,7 +90,7 @@ public class Controller {
     public void goBack() {
         splitPane.getItems().remove(activeControlPane);
         splitPane.getItems().add(controlPane);
-        if(autoTask!=null){
+        if (autoTask != null) {
             autoTask.interrupt();
             autoTask = null;
         }
@@ -102,8 +102,8 @@ public class Controller {
     }
 
     @FXML
-    public void playAuto(){
-        if(autoTask==null) {
+    public void playAuto() {
+        if (autoTask == null) {
             Task task = new Task() {
                 @Override
                 protected Object call() throws Exception {
@@ -115,6 +115,7 @@ public class Controller {
                         Thread.sleep(1000);
                         view = boardController.getNextView();
                     }
+                    autoTask = null;
                     return 1;
                 }
             };
@@ -125,8 +126,8 @@ public class Controller {
     }
 
     @FXML
-    public void pauseAuto(){
-        if(autoTask!=null){
+    public void pauseAuto() {
+        if (autoTask != null) {
             autoTask.interrupt();
             autoTask = null;
         }
