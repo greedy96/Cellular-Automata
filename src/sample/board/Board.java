@@ -1,5 +1,7 @@
 package sample.board;
 
+import javafx.scene.paint.Color;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -7,7 +9,7 @@ public class Board {
 
     private int step, lastStep;
     private int rows, columns;
-    private Grain[][] matrix;
+    private Cell[][] matrix;
     private NeighbourhoodEnum neighbourhoodEnum;
     private boolean periodicBoundary;
 
@@ -17,7 +19,7 @@ public class Board {
         this.rows = rows;
         this.columns = columns;
         this.periodicBoundary = periodicBoundary;
-        this.matrix = new Grain[rows][columns];
+        this.matrix = new Cell[rows][columns];
     }
 
     public int getRows() {
@@ -36,7 +38,7 @@ public class Board {
         return lastStep;
     }
 
-    public Grain[][] getMatrix() {
+    public Cell[][] getMatrix() {
         return matrix;
     }
 
@@ -92,6 +94,33 @@ public class Board {
         return !lastStepFlag;
     }
 
+    public void setRandomInclusions(int numberOfInclusions, int minRadius, int maxRadius) {
+        int i = 0;
+        Random random = new Random();
+        int x, y, radius;
+        while (i < numberOfInclusions) {
+            x = random.nextInt(rows);
+            y = random.nextInt(columns);
+            if (matrix[x][y] == null) {
+                radius = random.nextInt(maxRadius - minRadius) + minRadius;
+                fillCircle(new Inclusion(i, step, Color.BLACK), x, y, radius);
+                i++;
+            }
+        }
+    }
+
+    private void fillCircle(Inclusion inclusion, int x, int y, int r) {
+        int minX = Math.max(x - r, 0), maxX = Math.min(x + r, rows - 1);
+        int minY = Math.max(y - r, 0), maxY = Math.min(y + r, columns - 1);
+        for (int i = minX; i <= maxX; i++) {
+            for (int j = minY; j <= maxY; j++) {
+                if (((i - x) * (i - x) + (j - y) * (j - y)) <= (r * r)) {
+                    matrix[i][j] = inclusion;
+                }
+            }
+        }
+    }
+
     private Grain getBiggestNeighbourhood(int row, int column) {
         int minRow = Math.max(row - 1, 0), maxRow = Math.min(row + 1, rows - 1);
         int minColumn = Math.max(column - 1, 0), maxColumn = Math.min(column + 1, columns - 1);
@@ -100,11 +129,12 @@ public class Board {
         for (int i = minRow; i <= maxRow; i++) {
             for (int j = minColumn; j <= maxColumn; j++) {
                 if (i != row || j != column) {
-                    if (matrix[i][j] != null && matrix[i][j].getStartStep() != step) {
-                        if (matrix[i][j].checkNeighbourhood(row - i, column - j)) {
-                            neighbourhoodGrains.merge(matrix[i][j], 1, Integer::sum);
+                    if (matrix[i][j] != null && matrix[i][j].getStartStep() != step)
+                        if (matrix[i][j] instanceof Grain) {
+                            if (((Grain) matrix[i][j]).checkNeighbourhood(row - i, column - j)) {
+                                neighbourhoodGrains.merge(((Grain) matrix[i][j]), 1, Integer::sum);
+                            }
                         }
-                    }
                 }
             }
         }
@@ -146,12 +176,12 @@ public class Board {
                 else if (j >= columns) periodicColumn = j - columns;
 
                 if (periodicRow != row || periodicColumn != column) {
-                    if (matrix[periodicRow][periodicColumn] != null && matrix[periodicRow][periodicColumn].getStartStep() != step) {
+                    if (matrix[periodicRow][periodicColumn] != null && ((Grain) matrix[periodicRow][periodicColumn]).getStartStep() != step) {
                         int tmpRow = Math.max(Math.min(row - periodicRow, 1), -1);
                         int tmpColumn = Math.max(Math.min(column - periodicColumn, 1), -1);
 
-                        if (matrix[periodicRow][periodicColumn].checkNeighbourhood(tmpRow, tmpColumn)) {
-                            neighbourhoodGrains.merge(matrix[periodicRow][periodicColumn], 1, Integer::sum);
+                        if (((Grain) matrix[periodicRow][periodicColumn]).checkNeighbourhood(tmpRow, tmpColumn)) {
+                            neighbourhoodGrains.merge((Grain) matrix[periodicRow][periodicColumn], 1, Integer::sum);
                         }
                     }
                 }

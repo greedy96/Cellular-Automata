@@ -19,10 +19,12 @@ public class BoardController {
     private int currentStep;
     private boolean periodicBoundary;
 
-    public BoardController(int rows, int columns, int numberOfSeeds, NeighbourhoodEnum neighbourhoodEnum, boolean periodicBoundary) {
+    public BoardController(int rows, int columns, int numberOfSeeds, int numberOfInclusions, int minRadius,
+                           int maxRadius, NeighbourhoodEnum neighbourhoodEnum, boolean periodicBoundary) {
         board = new Board(rows, columns, periodicBoundary);
         this.periodicBoundary = periodicBoundary;
         currentStep = 0;
+        board.setRandomInclusions(numberOfInclusions, minRadius, maxRadius);
         board.setRandomGrains(numberOfSeeds, neighbourhoodEnum);
     }
 
@@ -58,26 +60,26 @@ public class BoardController {
 
         for (int i = 0; i < this.board.getRows(); i++) {
             for (int j = 0; j < this.board.getColumns(); j++) {
-                AnchorPane grain = getGrainView(this.board.getMatrix()[i][j]);
-                grain.setPrefSize(size, size);
-                grain.setPrefSize(size, size);
-                grain.setMaxSize(size, size);
-                AnchorPane.setTopAnchor(grain, i * size * 1.0);
-                AnchorPane.setLeftAnchor(grain, j * size * 1.0);
-                view.getChildren().add(grain);
+                AnchorPane cell = getGrainView(this.board.getMatrix()[i][j]);
+                cell.setPrefSize(size, size);
+                cell.setPrefSize(size, size);
+                cell.setMaxSize(size, size);
+                AnchorPane.setTopAnchor(cell, i * size * 1.0);
+                AnchorPane.setLeftAnchor(cell, j * size * 1.0);
+                view.getChildren().add(cell);
             }
         }
         return view;
     }
 
-    private AnchorPane getGrainView(Grain grain) {
-        AnchorPane grainView = new AnchorPane();
-        if (grain == null || grain.getStartStep() > currentStep)
-            grainView.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+    private AnchorPane getGrainView(Cell cell) {
+        AnchorPane cellView = new AnchorPane();
+        if (cell == null || cell.getStartStep() > currentStep)
+            cellView.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         else
-            grainView.setBackground(new Background(new BackgroundFill(grain.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+            cellView.setBackground(new Background(new BackgroundFill(cell.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        return grainView;
+        return cellView;
     }
 
 
@@ -136,16 +138,16 @@ public class BoardController {
 
             for (int i = 0; i < board.getRows(); i++) {
                 for (int j = 0; j < board.getColumns(); j++) {
-                    Grain grain = board.getMatrix()[i][j];
-                    if (grain != null) {
+                    Cell cell = board.getMatrix()[i][j];
+                    if (cell != null) {
                         csvWriter
                                 .append(String.valueOf(i))
                                 .append(",")
                                 .append(String.valueOf(j))
                                 .append(",")
-                                .append(String.valueOf(grain.getId()))
+                                .append(String.valueOf(cell.getId()))
                                 .append(",")
-                                .append(String.valueOf(grain.getStartStep()))
+                                .append(String.valueOf(cell.getStartStep()))
                                 .append("\n");
                     }
                 }
@@ -184,11 +186,11 @@ public class BoardController {
         }
     }
 
-    private void setSquareColor(BufferedImage img, int x, int y, int scale, Grain grain) {
+    private void setSquareColor(BufferedImage img, int x, int y, int scale, Cell cell) {
         for (int i = x * scale; i < (x + 1) * scale; i++) {
             for (int j = y * scale; j < (y + 1) * scale; j++) {
-                if (grain != null) {
-                    img.setRGB(i, j, getColor(grain.getColor()));
+                if (cell != null) {
+                    img.setRGB(i, j, getColor(cell.getColor()));
                 } else {
                     img.setRGB(i, j, getColor(Color.LIGHTGRAY));
                 }

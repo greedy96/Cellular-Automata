@@ -47,6 +47,13 @@ public class Controller {
     private Thread autoTask = null;
 
     @FXML
+    public TextField numberOfInclusions;
+    @FXML
+    public TextField minRadius;
+    @FXML
+    public TextField maxRadius;
+
+    @FXML
     public void initialize() {
         neighbourhood.setItems(FXCollections.observableArrayList(NeighbourhoodEnum.values()));
         neighbourhood.setValue(NeighbourhoodEnum.VON_NEUMANN);
@@ -63,7 +70,11 @@ public class Controller {
             int rows = Integer.parseInt(rowsTextField.getText());
             int columns = Integer.parseInt(columnsTextField.getText());
             int numberOfSeeds = Integer.parseInt(this.numberOfSeeds.getText());
-            boardController = new BoardController(rows, columns, numberOfSeeds, neighbourhood.getValue(), periodicBoundary.isSelected());
+            int numberOfInclusions = Integer.parseInt(this.numberOfInclusions.getText());
+            int minRadius = Integer.parseInt(this.minRadius.getText());
+            int maxRadius = Integer.parseInt(this.maxRadius.getText());
+            boardController = new BoardController(rows, columns, numberOfSeeds, numberOfInclusions, minRadius, maxRadius,
+                    neighbourhood.getValue(), periodicBoundary.isSelected());
             addBoardView(this.boardController.getCurrentView());
             splitPane.getItems().remove(controlPane);
             splitPane.getItems().add(activeControlPane);
