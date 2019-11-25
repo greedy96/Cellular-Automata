@@ -201,4 +201,8 @@ public class BoardController {
     private int getColor(Color color) {
         return 256 * 256 * (int) (255 * color.getRed()) + 256 * (int) (255 * color.getGreen()) + (int) (255 * color.getBlue());
     }
+
+    public Cell[][] getMatrix() {
+        return this.board.getMatrix();
+    }
 }

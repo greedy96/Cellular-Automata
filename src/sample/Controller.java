@@ -7,9 +7,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.board.BoardController;
+import sample.board.Cell;
 import sample.board.NeighbourhoodEnum;
 
 import java.io.File;
@@ -42,7 +44,7 @@ public class Controller {
     private ComboBox<NeighbourhoodEnum> neighbourhood;
 
     @FXML
-    private AnchorPane boardView;
+    private GridPane boardView;
 
     private Thread autoTask = null;
 
@@ -75,7 +77,7 @@ public class Controller {
             int maxRadius = Integer.parseInt(this.maxRadius.getText());
             boardController = new BoardController(rows, columns, numberOfSeeds, numberOfInclusions, minRadius, maxRadius,
                     neighbourhood.getValue(), periodicBoundary.isSelected());
-            addBoardView(this.boardController.getCurrentView());
+            generateBoardView(this.boardController.getMatrix());
             splitPane.getItems().remove(controlPane);
             splitPane.getItems().add(activeControlPane);
         } catch (NumberFormatException e) {
@@ -87,14 +89,14 @@ public class Controller {
     public void generateNextStep() {
         AnchorPane view = this.boardController.getNextView();
         if (view != null)
-            addBoardView(view);
+            changeBordView(this.boardController.getMatrix());
     }
 
     @FXML
     public void getPreviousStep() {
         AnchorPane view = this.boardController.getPreviousView();
         if (view != null)
-            addBoardView(view);
+            changeBordView(this.boardController.getMatrix());
     }
 
     @FXML
@@ -107,9 +109,39 @@ public class Controller {
         }
     }
 
-    private void addBoardView(AnchorPane anchorPane) {
-        boardView.getChildren().remove(0, boardView.getChildren().size());
-        boardView.getChildren().add(anchorPane);
+    private void generateBoardView(sample.board.Cell[][] matrix) {
+        boardView.getChildren().clear();
+        int rows = matrix.length, columns = matrix[0].length;
+        double size = 660.0 / rows;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                GridRectangle cell = getGrainView(matrix[i][j], i, j, size);
+                GridPane.setRowIndex(cell, i);
+                GridPane.setColumnIndex(cell, j);
+                boardView.getChildren().add(cell);
+            }
+        }
+    }
+
+    private GridRectangle getGrainView(Cell cell, int i, int j, double size) {
+        GridRectangle cellView = new GridRectangle(i, j, size);
+        if (cell == null)
+            cellView.setFill(Color.LIGHTGRAY);
+        else
+            cellView.setFill(cell.getColor());
+
+        return cellView;
+    }
+
+    private void changeBordView(sample.board.Cell[][] matrix) {
+        boardView.getChildren().forEach((rectangle) -> {
+            GridRectangle gridRectangle = ((GridRectangle) rectangle);
+            Cell cell = matrix[gridRectangle.getRow()][gridRectangle.getColumn()];
+            if (cell != null) {
+                gridRectangle.setFill(cell.getColor());
+            }
+        });
     }
 
     @FXML
@@ -121,7 +153,7 @@ public class Controller {
                     AnchorPane view = boardController.getNextView();
                     while (view != null) {
                         final AnchorPane viewTMP = view;
-                        Platform.runLater(() -> addBoardView(viewTMP));
+                        Platform.runLater(() -> changeBordView(boardController.getMatrix()));
 
                         Thread.sleep(1000);
                         view = boardController.getNextView();
@@ -153,7 +185,7 @@ public class Controller {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             boardController.openStateFromFile(file);
-            addBoardView(this.boardController.getCurrentView());
+//            addBoardView(this.boardController.getCurrentView());
             splitPane.getItems().remove(controlPane);
             splitPane.getItems().add(activeControlPane);
         }

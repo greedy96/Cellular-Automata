@@ -13,7 +13,7 @@
                     <children>
                         <ScrollPane styleClass="boardPane">
                             <content>
-                                <AnchorPane fx:id="boardView" styleClass="boardView"/>
+                                <GridPane fx:id="boardView" styleClass="boardView"/>
                             </content>
                         </ScrollPane>
                     </children>
