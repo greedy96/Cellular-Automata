@@ -1,10 +1,5 @@
 package sample.board;
 
-import javafx.geometry.Insets;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
@@ -28,60 +23,31 @@ public class BoardController {
         board.setRandomGrains(numberOfSeeds, neighbourhoodEnum);
     }
 
-    public AnchorPane getNextView() {
-        if (currentStep == board.getLastStep())
-            return null;
+    public BoardController(File file){
+        openStateFromFile(file);
+    }
 
+    public int getNextStep() {
         if (currentStep == board.getStep()) {
             board.generateNextStep();
-            currentStep = board.getStep();
-            return generateView();
         }
 
-        currentStep++;
-        return generateView();
-    }
-
-    public AnchorPane getPreviousView() {
-        if (currentStep == 0)
-            return null;
-
-        currentStep--;
-        return generateView();
-    }
-
-    public AnchorPane getCurrentView() {
-        return generateView();
-    }
-
-    private AnchorPane generateView() {
-        AnchorPane view = new AnchorPane();
-        double size = 660.0 / this.board.getRows();
-
-        for (int i = 0; i < this.board.getRows(); i++) {
-            for (int j = 0; j < this.board.getColumns(); j++) {
-                AnchorPane cell = getGrainView(this.board.getMatrix()[i][j]);
-                cell.setPrefSize(size, size);
-                cell.setPrefSize(size, size);
-                cell.setMaxSize(size, size);
-                AnchorPane.setTopAnchor(cell, i * size * 1.0);
-                AnchorPane.setLeftAnchor(cell, j * size * 1.0);
-                view.getChildren().add(cell);
-            }
+        if (currentStep != board.getLastStep()) {
+            currentStep++;
         }
-        return view;
+        return currentStep;
     }
 
-    private AnchorPane getGrainView(Cell cell) {
-        AnchorPane cellView = new AnchorPane();
-        if (cell == null || cell.getStartStep() > currentStep)
-            cellView.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
-        else
-            cellView.setBackground(new Background(new BackgroundFill(cell.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+    public int getPreviousStep() {
+        if (currentStep > 0)
+            currentStep--;
 
-        return cellView;
+        return currentStep;
     }
 
+    public int getCurrentStep() {
+        return currentStep;
+    }
 
     public void openStateFromFile(File file) {
         try {
@@ -97,7 +63,7 @@ public class BoardController {
 
                 board = new Board(rows, columns, periodicBoundary);
                 board.setStep(step);
-
+                currentStep = step;
                 Neighbourhood neighbourhood = new Neighbourhood(neighbourhoodEnum);
                 String row;
                 Map<Integer, Color> colors = new HashMap<>();

@@ -26,6 +26,8 @@ public class Controller {
     public AnchorPane controlPane;
     @FXML
     public AnchorPane activeControlPane;
+    @FXML
+    private GridPane boardPane;
 
     @FXML
     public TextField rowsTextField;
@@ -34,26 +36,21 @@ public class Controller {
     @FXML
     public TextField numberOfSeeds;
     @FXML
-    public RadioButton nonPeriodicBoundary;
-    @FXML
-    public RadioButton periodicBoundary;
-    @FXML
-    private BoardController boardController;
-
-    @FXML
-    private ComboBox<NeighbourhoodEnum> neighbourhood;
-
-    @FXML
-    private GridPane boardView;
-
-    private Thread autoTask = null;
-
-    @FXML
     public TextField numberOfInclusions;
     @FXML
     public TextField minRadius;
     @FXML
     public TextField maxRadius;
+    @FXML
+    public RadioButton nonPeriodicBoundary;
+    @FXML
+    public RadioButton periodicBoundary;
+    @FXML
+    private ComboBox<NeighbourhoodEnum> neighbourhood;
+
+    private BoardController boardController;
+    private Thread autoTask = null;
+    private Integer currentStep;
 
     @FXML
     public void initialize() {
@@ -77,6 +74,7 @@ public class Controller {
             int maxRadius = Integer.parseInt(this.maxRadius.getText());
             boardController = new BoardController(rows, columns, numberOfSeeds, numberOfInclusions, minRadius, maxRadius,
                     neighbourhood.getValue(), periodicBoundary.isSelected());
+            currentStep = 0;
             generateBoardView(this.boardController.getMatrix());
             splitPane.getItems().remove(controlPane);
             splitPane.getItems().add(activeControlPane);
@@ -87,16 +85,20 @@ public class Controller {
 
     @FXML
     public void generateNextStep() {
-        AnchorPane view = this.boardController.getNextView();
-        if (view != null)
+        int nextStep = this.boardController.getNextStep();
+        if (nextStep != currentStep) {
+            currentStep = nextStep;
             changeBordView(this.boardController.getMatrix());
+        }
     }
 
     @FXML
     public void getPreviousStep() {
-        AnchorPane view = this.boardController.getPreviousView();
-        if (view != null)
+        int previousStep = this.boardController.getPreviousStep();
+        if (previousStep != currentStep) {
+            currentStep = previousStep;
             changeBordView(this.boardController.getMatrix());
+        }
     }
 
     @FXML
@@ -110,7 +112,7 @@ public class Controller {
     }
 
     private void generateBoardView(sample.board.Cell[][] matrix) {
-        boardView.getChildren().clear();
+        boardPane.getChildren().clear();
         int rows = matrix.length, columns = matrix[0].length;
         double size = 660.0 / rows;
 
@@ -119,7 +121,7 @@ public class Controller {
                 GridRectangle cell = getGrainView(matrix[i][j], i, j, size);
                 GridPane.setRowIndex(cell, i);
                 GridPane.setColumnIndex(cell, j);
-                boardView.getChildren().add(cell);
+                boardPane.getChildren().add(cell);
             }
         }
     }
@@ -135,11 +137,14 @@ public class Controller {
     }
 
     private void changeBordView(sample.board.Cell[][] matrix) {
-        boardView.getChildren().forEach((rectangle) -> {
+        boardPane.getChildren().forEach((rectangle) -> {
             GridRectangle gridRectangle = ((GridRectangle) rectangle);
             Cell cell = matrix[gridRectangle.getRow()][gridRectangle.getColumn()];
             if (cell != null) {
-                gridRectangle.setFill(cell.getColor());
+                if (cell.getStartStep() <= currentStep)
+                    gridRectangle.setFill(cell.getColor());
+                else
+                    gridRectangle.setFill(Color.LIGHTGRAY);
             }
         });
     }
@@ -150,13 +155,13 @@ public class Controller {
             Task task = new Task() {
                 @Override
                 protected Object call() throws Exception {
-                    AnchorPane view = boardController.getNextView();
-                    while (view != null) {
-                        final AnchorPane viewTMP = view;
+                    int nextStep = boardController.getNextStep();
+                    while (nextStep != currentStep) {
+                        currentStep = nextStep;
                         Platform.runLater(() -> changeBordView(boardController.getMatrix()));
 
+                        nextStep = boardController.getNextStep();
                         Thread.sleep(1000);
-                        view = boardController.getNextView();
                     }
                     autoTask = null;
                     return 1;
@@ -184,8 +189,9 @@ public class Controller {
         Stage stage = (Stage) mainView.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
-            boardController.openStateFromFile(file);
-//            addBoardView(this.boardController.getCurrentView());
+            boardController = new BoardController(file);
+            currentStep = boardController.getCurrentStep();
+            generateBoardView(this.boardController.getMatrix());
             splitPane.getItems().remove(controlPane);
             splitPane.getItems().add(activeControlPane);
         }
@@ -209,7 +215,7 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("BMP image (*.bmp)", "*.bmp");
         FileChooser.ExtensionFilter extensionFilter2 = new FileChooser.ExtensionFilter("PNG image (*.png)", "*.png");
-        FileChooser.ExtensionFilter extensionFilter3 = new FileChooser.ExtensionFilter("JPEQ image (*.jpeg)", "*.jpeg");
+        FileChooser.ExtensionFilter extensionFilter3 = new FileChooser.ExtensionFilter("JPEG image (*.jpeg)", "*.jpeg");
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.getExtensionFilters().add(extensionFilter2);
         fileChooser.getExtensionFilters().add(extensionFilter3);
