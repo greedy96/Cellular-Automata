@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 public class Inclusion extends Cell {
 
-    public Inclusion(int id, int startStep, Color color) {
-        super(id, startStep, color);
+    public Inclusion(int id, int startStep) {
+        super(id, startStep, Color.BLACK);
     }
 }

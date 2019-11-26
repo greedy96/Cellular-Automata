@@ -23,7 +23,7 @@ public class BoardController {
         board.setRandomGrains(numberOfSeeds, neighbourhoodEnum);
     }
 
-    public BoardController(File file){
+    public BoardController(File file) {
         openStateFromFile(file);
     }
 
@@ -69,17 +69,22 @@ public class BoardController {
                 Map<Integer, Color> colors = new HashMap<>();
                 while ((row = csvReader.readLine()) != null) {
                     String[] grainString = row.split(",");
-                    int x = Integer.parseInt(grainString[0]);
-                    int y = Integer.parseInt(grainString[1]);
-                    int id = Integer.parseInt(grainString[2]);
-                    int startStep = Integer.parseInt(grainString[3]);
-
-                    if (!colors.containsKey(id)) {
-                        Grain grain = new Grain(id, startStep, null, neighbourhood);
-                        board.getMatrix()[x][y] = grain;
-                        colors.put(grain.getId(), grain.getColor());
-                    } else {
-                        board.getMatrix()[x][y] = new Grain(id, startStep, colors.get(id), neighbourhood);
+                    String type = grainString[0];
+                    int x = Integer.parseInt(grainString[1]);
+                    int y = Integer.parseInt(grainString[2]);
+                    int id = Integer.parseInt(grainString[3]);
+                    int startStep = Integer.parseInt(grainString[4]);
+                    if ("G".equals(type)) {
+                        if (!colors.containsKey(id)) {
+                            Grain grain = new Grain(id, startStep, null, neighbourhood);
+                            board.getMatrix()[x][y] = grain;
+                            colors.put(grain.getId(), grain.getColor());
+                        } else {
+                            board.getMatrix()[x][y] = new Grain(id, startStep, colors.get(id), neighbourhood);
+                        }
+                    } else if ("I".equals(type)) {
+                        Inclusion inclusion = new Inclusion(id, startStep);
+                        board.getMatrix()[x][y] = inclusion;
                     }
                 }
             }
@@ -106,6 +111,11 @@ public class BoardController {
                 for (int j = 0; j < board.getColumns(); j++) {
                     Cell cell = board.getMatrix()[i][j];
                     if (cell != null) {
+                        if (Grain.class.equals(cell.getClass())) {
+                            csvWriter.append("G,");
+                        } else if (Inclusion.class.equals(cell.getClass())) {
+                            csvWriter.append("I,");
+                        }
                         csvWriter
                                 .append(String.valueOf(i))
                                 .append(",")
