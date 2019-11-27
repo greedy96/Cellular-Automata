@@ -102,7 +102,10 @@ public class Board {
             x = random.nextInt(rows);
             y = random.nextInt(columns);
             if (matrix[x][y] == null) {
-                radius = random.nextInt(maxRadius - minRadius) + minRadius;
+                if (maxRadius - minRadius == 0)
+                    radius = minRadius;
+                else
+                    radius = random.nextInt(maxRadius - minRadius) + minRadius;
                 fillCircle(new Inclusion(i, step), x, y, radius);
                 i++;
             }

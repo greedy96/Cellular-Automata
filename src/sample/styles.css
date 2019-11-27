@@ -20,22 +20,28 @@ BorderPane {
 .controlPane {
     -fx-label-padding: 50px;
     -fx-min-width: 300px;
+    -fx-max-width: 300px;
     -fx-border-color: blue;
     -fx-background-color: #1c313a;
 }
 
 .label {
     -fx-text-fill: #b0bec5;
+    -fx-font-weight: bold;
 }
 
 .text-field, .combo-box, .button {
-    -fx-min-width: 100px;
+    -fx-min-width: 60px;
     -fx-border-color: #ffa726;
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
     -fx-background-radius: 10px;
     -fx-text-fill: #b0bec5;
     -fx-background-color: #455a64;
+}
+
+.text-field {
+    -fx-max-width: 50px;
 }
 
 .button:hover {
@@ -54,10 +60,30 @@ BorderPane {
     -fx-min-width: 200px;
 }
 
+.combo-box .cell {
+    -fx-background-color: #1c313a;
+    -fx-text-fill: #b0bec5;
+    -fx-alignment: CENTER;
+}
+
+.combo-box .list-view {
+    -fx-border-color: #ffa726;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-background-radius: 10px;
+}
+
+.combo-box .cell:hover {
+    -fx-text-fill: #b0bec5;
+    -fx-background-color: #718792;
+}
+
+
 .radio-button {
     -fx-text-fill: #b0bec5;
 }
 
 .radio-button:selected {
     -fx-text-fill: green;
+    -fx-font-weight: bold;
 }

@@ -138,7 +138,7 @@ public class BoardController {
 
     public void generateImage(File file) {
         try {
-            int scale = 640 / board.getRows();
+            int scale = 1400 / board.getRows();
 
             BufferedImage img = new BufferedImage(scale * board.getRows(), scale * board.getColumns(),
                     BufferedImage.TYPE_INT_RGB);

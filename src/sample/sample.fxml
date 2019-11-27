@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="mainView" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.172"
+<BorderPane fx:id="mainView" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/10.0.2-internal"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <center>
         <AnchorPane styleClass="boardPane">
-            <ScrollPane fx:id="scrollPane" pannable="true" fitToWidth="true" fitToHeight="true">
+            <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" pannable="true">
                 <GridPane fx:id="boardPane" styleClass="boardView"/>
             </ScrollPane>
         </AnchorPane>
@@ -23,47 +15,48 @@
     <right>
         <AnchorPane fx:id="controlPane" styleClass="controlPane">
             <AnchorPane fx:id="startControlPane">
-                <TextField fx:id="rowsTextField" layoutY="49.0"/>
-                <TextField fx:id="columnsTextField" layoutY="114.0"/>
-                <TextField fx:id="numberOfSeeds" layoutY="177.0"/>
-                <TextField fx:id="numberOfInclusions" layoutY="239.0"/>
-                <TextField fx:id="minRadius" layoutY="299.0"/>
-                <TextField fx:id="maxRadius" layoutY="370.0"/>
-                <ComboBox fx:id="neighbourhood" layoutY="446.0" prefWidth="150.0"/>
-                <RadioButton fx:id="nonPeriodicBoundary" layoutY="533.0" mnemonicParsing="false"
+                <TextField fx:id="rowsTextField" layoutX="60.0" layoutY="50.0"/>
+                <TextField fx:id="columnsTextField" layoutX="200.0" layoutY="50.0"/>
+                <TextField fx:id="numberOfSeeds" layoutX="60.0" layoutY="150.0"/>
+                <TextField fx:id="numberOfInclusions" layoutX="200.0" layoutY="150.0"/>
+                <TextField fx:id="minRadius" layoutX="60.0" layoutY="250.0"/>
+                <TextField fx:id="maxRadius" layoutX="200.0" layoutY="250.0"/>
+                <ComboBox fx:id="neighbourhood" layoutX="50.0" layoutY="350.0"/>
+                <RadioButton fx:id="nonPeriodicBoundary" layoutX="50.0" layoutY="450.0" mnemonicParsing="false"
                              text="Non-periodic boundary"/>
-                <RadioButton fx:id="periodicBoundary" layoutX="7.0" layoutY="508.0" mnemonicParsing="false"
+                <RadioButton fx:id="periodicBoundary" layoutX="50.0" layoutY="475.0" mnemonicParsing="false"
                              text="Periodic boundary"/>
-                <Button layoutX="60.0" layoutY="566.0" mnemonicParsing="false" onAction="#generateBoard"
+                <Button layoutX="100.0" layoutY="520.0" mnemonicParsing="false" onAction="#generateBoard"
                         text="Generate"/>
-                <Button layoutX="36.0" layoutY="609.0" mnemonicParsing="false" onAction="#openFile"
+                <Button layoutX="80.0" layoutY="650.0" mnemonicParsing="false" onAction="#openFile"
                         text="Import from file"/>
-                <Label layoutX="15.0" layoutY="24.0" text="Rows:"/>
-                <Label layoutX="15.0" layoutY="89.0" text="Columns:"/>
-                <Label layoutX="15.0" layoutY="151.0" text="Number of seeds:"/>
-                <Label layoutX="43.0" layoutY="421.0" text="Neighbourhood:"/>
-                <Label layoutX="6.0" layoutY="483.0" text="Boundary condition:"/>
-                <Label layoutX="10.0" layoutY="214.0" text="Number of inclusions:"/>
-                <Label layoutX="10.0" layoutY="276.0" text="Inclusions min radius:"/>
-                <Label layoutX="10.0" layoutY="345.0" text="Inclusions max radius:"/>
+                <Label layoutX="15.0" layoutY="25.0" text="Board"/>
+                <Label layoutX="15.0" layoutY="57.0" text="rows"/>
+                <Label layoutX="130.0" layoutY="57.0" text="columns"/>
+                <Label layoutX="15.0" layoutY="125.0" text="Number of"/>
+                <Label layoutX="15.0" layoutY="158.0" text="seeds"/>
+                <Label layoutX="125.0" layoutY="158.0" text="inclusions"/>
+                <Label layoutX="15.0" layoutY="225.0" text="Inclusions radius"/>
+                <Label layoutX="15.0" layoutY="257.0" text="min"/>
+                <Label layoutX="150.0" layoutY="257.0" text="max"/>
+                <Label layoutX="85.0" layoutY="325.0" text="Neighbourhood:"/>
+                <Label layoutX="50.0" layoutY="425.0" text="Boundary condition:"/>
             </AnchorPane>
             <AnchorPane fx:id="activeControlPane">
-                <Button layoutX="126.0" layoutY="149.0" mnemonicParsing="false" onAction="#scaleUp"
-                        text="+"/>
-                <Button layoutX="13.0" layoutY="149.0" mnemonicParsing="false" onAction="#scaleDown"
-                        text="-"/>
-
-                <Button layoutX="59.0" layoutY="190.0" mnemonicParsing="false" onAction="#saveToFile"
+                <Button layoutX="160.0" layoutY="50.0" mnemonicParsing="false" onAction="#saveToFile"
                         text="Save to file"/>
-                <Button layoutX="48.0" layoutY="269.0" mnemonicParsing="false" onAction="#saveAsImage"
+                <Button layoutX="20.0" layoutY="50.0" mnemonicParsing="false" onAction="#saveAsImage"
                         text="Save as image"/>
-                <Button layoutX="126.0" layoutY="349.0" mnemonicParsing="false" onAction="#generateNextStep"
+                <Button layoutX="160.0" layoutY="150.0" mnemonicParsing="false" onAction="#scaleUp" text="+"/>
+                <Button layoutX="40.0" layoutY="150.0" mnemonicParsing="false" onAction="#scaleDown" text="-"/>
+                <Button layoutX="160.0" layoutY="300.0" mnemonicParsing="false" onAction="#generateNextStep"
                         text="Next"/>
-                <Button layoutX="13.0" layoutY="349.0" mnemonicParsing="false" onAction="#getPreviousStep"
+                <Button layoutX="40.0" layoutY="300.0" mnemonicParsing="false" onAction="#getPreviousStep"
                         text="Previous"/>
-                <Button layoutX="126.0" layoutY="549.0" mnemonicParsing="false" onAction="#playAuto" text="Auto"/>
-                <Button layoutX="13.0" layoutY="549.0" mnemonicParsing="false" onAction="#pauseAuto" text="Pause"/>
-                <Button layoutX="81.0" layoutY="428.0" mnemonicParsing="false" onAction="#goBack" text="Reset"/>
+                <Button fx:id="playButton" layoutX="160.0" layoutY="400.0" mnemonicParsing="false" onAction="#playAuto"
+                        text="Auto"/>
+                <Button layoutX="40.0" layoutY="400.0" mnemonicParsing="false" onAction="#pauseAuto" text="Pause"/>
+                <Button layoutX="100.0" layoutY="550.0" mnemonicParsing="false" onAction="#goBack" text="Reset"/>
             </AnchorPane>
         </AnchorPane>
     </right>

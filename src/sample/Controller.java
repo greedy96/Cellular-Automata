@@ -52,10 +52,13 @@ public class Controller {
     @FXML
     private ComboBox<NeighbourhoodEnum> neighbourhood;
 
+    @FXML
+    private Button playButton;
+
     private BoardController boardController;
     private Thread autoTask = null;
     private Integer currentStep;
-    private double scale;
+    private double rectangleSize;
 
     @FXML
     public void initialize() {
@@ -82,7 +85,6 @@ public class Controller {
                     neighbourhood.getValue(), periodicBoundary.isSelected());
             currentStep = 0;
             generateBoardView(this.boardController.getMatrix());
-            scale = 1;
             setBoardScale();
             controlPane.getChildren().set(0, activeControlPane);
         } catch (NumberFormatException e) {
@@ -120,11 +122,11 @@ public class Controller {
     private void generateBoardView(sample.board.Cell[][] matrix) {
         boardPane.getChildren().clear();
         int rows = matrix.length, columns = matrix[0].length;
-        double size = 660.0 / rows;
+        rectangleSize = Math.round(Math.max(1.0, 700.0 / Math.min(rows, columns)));
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                GridRectangle cell = getGrainView(matrix[i][j], i, j, size);
+                GridRectangle cell = getGrainView(matrix[i][j], i, j, rectangleSize);
                 GridPane.setRowIndex(cell, i);
                 GridPane.setColumnIndex(cell, j);
                 boardPane.getChildren().add(cell);
@@ -173,7 +175,7 @@ public class Controller {
                     return 1;
                 }
             };
-
+            playButton.setStyle("-fx-border-color: green;");
             autoTask = new Thread(task);
             autoTask.start();
         }
@@ -182,6 +184,7 @@ public class Controller {
     @FXML
     public void pauseAuto() {
         if (autoTask != null) {
+            playButton.setStyle("-fx-border-color: #ffa726;");
             autoTask.interrupt();
             autoTask = null;
         }
@@ -234,17 +237,21 @@ public class Controller {
 
     @FXML
     public void scaleUp() {
-        scale = Math.min(10, scale + 0.1);
+        rectangleSize = Math.min(70, Math.round(rectangleSize * 1.5));
         setBoardScale();
     }
 
     @FXML
     public void scaleDown() {
-        scale = Math.max(0.1, scale - 0.1);
+        rectangleSize = Math.max(1, Math.round(rectangleSize / 1.5));
         setBoardScale();
     }
 
     private void setBoardScale() {
-        boardPane.getTransforms().add(new Scale(scale, scale, 0, 0));
+        boardPane.getChildren().forEach((rectangle) -> {
+            GridRectangle gridRectangle = ((GridRectangle) rectangle);
+            gridRectangle.setHeight(rectangleSize);
+            gridRectangle.setWidth(rectangleSize);
+        });
     }
 }
