@@ -1,20 +1,63 @@
-GridPane {
+BorderPane {
     -fx-pref-width: 920px;
     -fx-pref-height: 690px;
     -fx-font-size: 16px;
-}
-
-SplitPane {
-    -fx-pref-width: 880px;
-    -fx-pref-height: 660px;
+    -fx-background-color: #455a64;
 }
 
 .boardPane {
-    -fx-pref-width: 660px;
-    -fx-pref-height: 660px;
+    -fx-pref-width: 700px;
+    -fx-pref-height: 700px;
+    -fx-border-color: red;
 }
 
 .boardView {
-    -fx-pref-width: 640px;
-    -fx-pref-height: 640px;
+    -fx-pref-width: 680px;
+    -fx-pref-height: 680px;
+    -fx-background-color: #718792;
+}
+
+.controlPane {
+    -fx-label-padding: 50px;
+    -fx-min-width: 300px;
+    -fx-border-color: blue;
+    -fx-background-color: #1c313a;
+}
+
+.label {
+    -fx-text-fill: #b0bec5;
+}
+
+.text-field, .combo-box, .button {
+    -fx-min-width: 100px;
+    -fx-border-color: #ffa726;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-background-radius: 10px;
+    -fx-text-fill: #b0bec5;
+    -fx-background-color: #455a64;
+}
+
+.button:hover {
+    -fx-border-color: #ffd95b;
+    -fx-text-fill: #b0bec5;
+    -fx-background-color: #718792;
+}
+
+.text-field:focused, .combo-box:focused {
+    -fx-border-color: #ffd95b;
+    -fx-text-fill: #b0bec5;
+    -fx-background-color: #718792;
+}
+
+.combo-box {
+    -fx-min-width: 200px;
+}
+
+.radio-button {
+    -fx-text-fill: #b0bec5;
+}
+
+.radio-button:selected {
+    -fx-text-fill: green;
 }

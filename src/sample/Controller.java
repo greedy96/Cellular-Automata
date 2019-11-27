@@ -6,8 +6,10 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.board.BoardController;
@@ -19,13 +21,15 @@ import java.io.File;
 public class Controller {
 
     @FXML
-    public GridPane mainView;
-    @FXML
-    public SplitPane splitPane;
+    public BorderPane mainView;
     @FXML
     public AnchorPane controlPane;
     @FXML
+    public AnchorPane startControlPane;
+    @FXML
     public AnchorPane activeControlPane;
+    @FXML
+    public ScrollPane scrollPane;
     @FXML
     private GridPane boardPane;
 
@@ -51,6 +55,7 @@ public class Controller {
     private BoardController boardController;
     private Thread autoTask = null;
     private Integer currentStep;
+    private double scale;
 
     @FXML
     public void initialize() {
@@ -60,7 +65,8 @@ public class Controller {
         periodicBoundary.setToggleGroup(boundaryGroup);
         nonPeriodicBoundary.setToggleGroup(boundaryGroup);
         nonPeriodicBoundary.fire();
-        splitPane.getItems().remove(activeControlPane);
+        controlPane.getChildren().clear();
+        controlPane.getChildren().setAll(startControlPane);
     }
 
     @FXML
@@ -76,8 +82,9 @@ public class Controller {
                     neighbourhood.getValue(), periodicBoundary.isSelected());
             currentStep = 0;
             generateBoardView(this.boardController.getMatrix());
-            splitPane.getItems().remove(controlPane);
-            splitPane.getItems().add(activeControlPane);
+            scale = 1;
+            setBoardScale();
+            controlPane.getChildren().set(0, activeControlPane);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -103,8 +110,7 @@ public class Controller {
 
     @FXML
     public void goBack() {
-        splitPane.getItems().remove(activeControlPane);
-        splitPane.getItems().add(controlPane);
+        controlPane.getChildren().set(0, startControlPane);
         if (autoTask != null) {
             autoTask.interrupt();
             autoTask = null;
@@ -192,8 +198,7 @@ public class Controller {
             boardController = new BoardController(file);
             currentStep = boardController.getCurrentStep();
             generateBoardView(this.boardController.getMatrix());
-            splitPane.getItems().remove(controlPane);
-            splitPane.getItems().add(activeControlPane);
+            controlPane.getChildren().set(0, activeControlPane);
         }
     }
 
@@ -225,5 +230,21 @@ public class Controller {
         if (file != null) {
             boardController.generateImage(file);
         }
+    }
+
+    @FXML
+    public void scaleUp() {
+        scale = Math.min(10, scale + 0.1);
+        setBoardScale();
+    }
+
+    @FXML
+    public void scaleDown() {
+        scale = Math.max(0.1, scale - 0.1);
+        setBoardScale();
+    }
+
+    private void setBoardScale() {
+        boardPane.getTransforms().add(new Scale(scale, scale, 0, 0));
     }
 }
