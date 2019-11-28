@@ -1,7 +1,5 @@
 package sample.board;
 
-import javafx.scene.paint.Color;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -145,21 +143,16 @@ public class Board {
     }
 
     private Grain getOneBiggestNeighbourhood(Map<Grain, Integer> neighbourhoodGrains) {
-        Grain grain = null;
-        Optional<Map.Entry<Grain, Integer>> optional = neighbourhoodGrains.entrySet().stream().max(Comparator.comparing(Map.Entry::getValue));
-        if (optional.isPresent()) {
-            int max = optional.get().getValue();
-            List<Grain> grainList = neighbourhoodGrains.entrySet().stream()
-                    .filter(entry -> entry.getValue() == max)
-                    .map(Map.Entry::getKey)
-                    .collect(Collectors.toList());
-            if (grainList.size() > 1) {
-                grain = grainList.get(new Random().nextInt(grainList.size()));
-            } else {
-                grain = grainList.get(0);
-            }
-        }
-        return grain;
+        Optional<Map.Entry<Grain, Integer>> optional = neighbourhoodGrains.entrySet().stream()
+                .max(Comparator.comparing(Map.Entry::getValue));
+
+        return optional.map(Map.Entry::getValue)
+                .map(max -> neighbourhoodGrains.entrySet().stream()
+                        .filter(entry -> Objects.equals(entry.getValue(), max))
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toList()))
+                .map(grainList -> grainList.size() > 1 ? grainList.get(new Random().nextInt(grainList.size())) : grainList.get(0))
+                .orElse(null);
     }
 
     private Grain getPeriodicBiggestNeighbourhood(int row, int column) {

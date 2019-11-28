@@ -4,12 +4,12 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.board.BoardController;
@@ -87,6 +87,7 @@ public class Controller {
             generateBoardView(this.boardController.getMatrix());
             setBoardScale();
             controlPane.getChildren().set(0, activeControlPane);
+            boardPane.setAlignment(Pos.CENTER);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }

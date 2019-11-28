@@ -7,7 +7,9 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <center>
         <AnchorPane styleClass="boardPane">
-            <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" pannable="true">
+            <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" pannable="true"
+                        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                        AnchorPane.topAnchor="0.0">
                 <GridPane fx:id="boardPane" styleClass="boardView"/>
             </ScrollPane>
         </AnchorPane>

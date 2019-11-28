@@ -2,8 +2,6 @@ package sample.board;
 
 import javafx.scene.paint.Color;
 
-import java.util.Objects;
-
 public class Grain extends Cell {
 
     private Neighbourhood neighbourhood;

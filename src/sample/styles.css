@@ -8,7 +8,6 @@ BorderPane {
 .boardPane {
     -fx-pref-width: 700px;
     -fx-pref-height: 700px;
-    -fx-border-color: red;
 }
 
 .boardView {
@@ -21,7 +20,6 @@ BorderPane {
     -fx-label-padding: 50px;
     -fx-min-width: 300px;
     -fx-max-width: 300px;
-    -fx-border-color: blue;
     -fx-background-color: #1c313a;
 }
 
