@@ -42,10 +42,18 @@ BorderPane {
     -fx-max-width: 50px;
 }
 
+.text-field.error {
+    -fx-border-color: red;
+}
+
 .button:hover {
     -fx-border-color: #ffd95b;
     -fx-text-fill: #b0bec5;
     -fx-background-color: #718792;
+}
+
+.button.active {
+    -fx-border-color: green;
 }
 
 .text-field:focused, .combo-box:focused {

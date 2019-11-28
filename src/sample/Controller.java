@@ -75,12 +75,12 @@ public class Controller {
     @FXML
     public void generateBoard() {
         try {
-            int rows = Integer.parseInt(rowsTextField.getText());
-            int columns = Integer.parseInt(columnsTextField.getText());
-            int numberOfSeeds = Integer.parseInt(this.numberOfSeeds.getText());
-            int numberOfInclusions = Integer.parseInt(this.numberOfInclusions.getText());
-            int minRadius = Integer.parseInt(this.minRadius.getText());
-            int maxRadius = Integer.parseInt(this.maxRadius.getText());
+            int rows = parseTextToInt(rowsTextField, 1, 1000);
+            int columns = parseTextToInt(columnsTextField, 1, 1000);
+            int numberOfSeeds = parseTextToInt(this.numberOfSeeds, 0, Math.max(rows, columns));
+            int numberOfInclusions = parseTextToInt(this.numberOfInclusions, 0, Math.max(rows, columns));
+            int minRadius = parseTextToInt(this.minRadius, 0, Math.max(rows / 2, columns / 2));
+            int maxRadius = parseTextToInt(this.maxRadius, minRadius, Math.max(rows / 2, columns / 2));
             boardController = new BoardController(rows, columns, numberOfSeeds, numberOfInclusions, minRadius, maxRadius,
                     neighbourhood.getValue(), periodicBoundary.isSelected());
             currentStep = 0;
@@ -88,8 +88,20 @@ public class Controller {
             setBoardScale();
             controlPane.getChildren().set(0, activeControlPane);
             boardPane.setAlignment(Pos.CENTER);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        } catch (NumberFormatException ignored) {
+        }
+    }
+
+    private int parseTextToInt(TextField textField, int min, int max) throws NumberFormatException {
+        try {
+            int number = Integer.parseInt(textField.getText());
+            if (number < min || number > max)
+                throw new NumberFormatException();
+            textField.getStyleClass().remove("error");
+            return number;
+        } catch (NumberFormatException ignored) {
+            textField.getStyleClass().add("error");
+            throw new NumberFormatException();
         }
     }
 
@@ -172,11 +184,12 @@ public class Controller {
                         nextStep = boardController.getNextStep();
                         Thread.sleep(1000);
                     }
+                    playButton.getStyleClass().remove("active");
                     autoTask = null;
                     return 1;
                 }
             };
-            playButton.setStyle("-fx-border-color: green;");
+            playButton.getStyleClass().add("active");
             autoTask = new Thread(task);
             autoTask.start();
         }
@@ -185,7 +198,7 @@ public class Controller {
     @FXML
     public void pauseAuto() {
         if (autoTask != null) {
-            playButton.setStyle("-fx-border-color: #ffa726;");
+            playButton.getStyleClass().remove("active");
             autoTask.interrupt();
             autoTask = null;
         }
