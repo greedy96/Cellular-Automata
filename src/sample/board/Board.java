@@ -172,12 +172,14 @@ public class Board {
                 else if (j >= columns) periodicColumn = j - columns;
 
                 if (periodicRow != row || periodicColumn != column) {
-                    if (matrix[periodicRow][periodicColumn] != null && ((Grain) matrix[periodicRow][periodicColumn]).getStartStep() != step) {
-                        int tmpRow = Math.max(Math.min(row - periodicRow, 1), -1);
-                        int tmpColumn = Math.max(Math.min(column - periodicColumn, 1), -1);
+                    if (matrix[periodicRow][periodicColumn] != null && matrix[periodicRow][periodicColumn].getStartStep() != step) {
+                        if (matrix[periodicRow][periodicColumn] instanceof Grain) {
+                            int tmpRow = Math.max(Math.min(row - periodicRow, 1), -1);
+                            int tmpColumn = Math.max(Math.min(column - periodicColumn, 1), -1);
 
-                        if (((Grain) matrix[periodicRow][periodicColumn]).checkNeighbourhood(tmpRow, tmpColumn)) {
-                            neighbourhoodGrains.merge((Grain) matrix[periodicRow][periodicColumn], 1, Integer::sum);
+                            if (((Grain) matrix[periodicRow][periodicColumn]).checkNeighbourhood(tmpRow, tmpColumn)) {
+                                neighbourhoodGrains.merge((Grain) matrix[periodicRow][periodicColumn], 1, Integer::sum);
+                            }
                         }
                     }
                 }
