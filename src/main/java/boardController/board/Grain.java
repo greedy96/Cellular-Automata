@@ -1,4 +1,4 @@
-package sample.board;
+package boardController.board;
 
 import javafx.scene.paint.Color;
 
@@ -18,7 +18,6 @@ public class Grain extends Cell {
     public Grain copy(int startStep) {
         return new Grain(id, startStep, color, neighbourhood);
     }
-
 
     public String toString() {
         return Integer.toString(id);

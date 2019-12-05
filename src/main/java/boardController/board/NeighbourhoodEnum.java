@@ -1,4 +1,4 @@
-package sample.board;
+package boardController.board;
 
 public enum NeighbourhoodEnum {
     VON_NEUMANN("Von Neumann"), MOORE("Moore"), HEXAGONAL_LEFT("Hexagonal left"),

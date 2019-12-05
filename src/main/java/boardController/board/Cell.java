@@ -1,10 +1,12 @@
-package sample.board;
+package boardController.board;
 
 import javafx.scene.paint.Color;
+import lombok.Getter;
 
 import java.util.Objects;
 import java.util.Random;
 
+@Getter
 public abstract class Cell {
 
     protected int id;
@@ -19,18 +21,6 @@ public abstract class Cell {
         } else {
             this.color = color;
         }
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public int getStartStep() {
-        return startStep;
-    }
-
-    public Color getColor() {
-        return color;
     }
 
     private Color generateColor() {

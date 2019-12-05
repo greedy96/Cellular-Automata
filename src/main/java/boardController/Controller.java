@@ -1,4 +1,4 @@
-package sample;
+package boardController;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -12,9 +12,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import sample.board.BoardController;
-import sample.board.Cell;
-import sample.board.NeighbourhoodEnum;
+import boardController.board.BoardController;
+import boardController.board.Cell;
+import boardController.board.NeighbourhoodEnum;
 
 import java.io.File;
 
@@ -132,7 +132,7 @@ public class Controller {
         }
     }
 
-    private void generateBoardView(sample.board.Cell[][] matrix) {
+    private void generateBoardView(boardController.board.Cell[][] matrix) {
         boardPane.getChildren().clear();
         int rows = matrix.length, columns = matrix[0].length;
         rectangleSize = Math.round(Math.max(1.0, 700.0 / Math.min(rows, columns)));
@@ -157,7 +157,7 @@ public class Controller {
         return cellView;
     }
 
-    private void changeBordView(sample.board.Cell[][] matrix) {
+    private void changeBordView(boardController.board.Cell[][] matrix) {
         boardPane.getChildren().forEach((rectangle) -> {
             GridRectangle gridRectangle = ((GridRectangle) rectangle);
             Cell cell = matrix[gridRectangle.getRow()][gridRectangle.getColumn()];
@@ -182,7 +182,7 @@ public class Controller {
                         Platform.runLater(() -> changeBordView(boardController.getMatrix()));
 
                         nextStep = boardController.getNextStep();
-                        Thread.sleep(1000);
+                        Thread.sleep(10);
                     }
                     playButton.getStyleClass().remove("active");
                     autoTask = null;

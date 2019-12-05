@@ -1,8 +1,11 @@
-package sample.board;
+package boardController.board;
+
+import lombok.Getter;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Getter
 public class Board {
 
     private int step, lastStep;
@@ -18,26 +21,6 @@ public class Board {
         this.columns = columns;
         this.periodicBoundary = periodicBoundary;
         this.matrix = new Cell[rows][columns];
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public int getColumns() {
-        return columns;
-    }
-
-    public int getStep() {
-        return step;
-    }
-
-    public int getLastStep() {
-        return lastStep;
-    }
-
-    public Cell[][] getMatrix() {
-        return matrix;
     }
 
     public void setStep(int step) {
