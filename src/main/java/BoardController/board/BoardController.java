@@ -1,5 +1,8 @@
-package boardController.board;
+package BoardController.board;
 
+import BoardController.board.cells.Cell;
+import BoardController.board.cells.Grain;
+import BoardController.board.cells.Inclusion;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
@@ -64,7 +67,6 @@ public class BoardController {
                 board = new Board(rows, columns, periodicBoundary);
                 board.setStep(step);
                 currentStep = step;
-                Neighbourhood neighbourhood = new Neighbourhood(neighbourhoodEnum);
                 String row;
                 Map<Integer, Color> colors = new HashMap<>();
                 while ((row = csvReader.readLine()) != null) {
@@ -76,11 +78,11 @@ public class BoardController {
                     int startStep = Integer.parseInt(grainString[4]);
                     if ("G".equals(type)) {
                         if (!colors.containsKey(id)) {
-                            Grain grain = new Grain(id, startStep, null, neighbourhood);
+                            Grain grain = new Grain(id, startStep, null, neighbourhoodEnum);
                             board.getMatrix()[x][y] = grain;
                             colors.put(grain.getId(), grain.getColor());
                         } else {
-                            board.getMatrix()[x][y] = new Grain(id, startStep, colors.get(id), neighbourhood);
+                            board.getMatrix()[x][y] = new Grain(id, startStep, colors.get(id), neighbourhoodEnum);
                         }
                     } else if ("I".equals(type)) {
                         Inclusion inclusion = new Inclusion(id, startStep);

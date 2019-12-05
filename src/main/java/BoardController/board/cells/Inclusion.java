@@ -1,4 +1,4 @@
-package boardController.board;
+package BoardController.board.cells;
 
 import javafx.scene.paint.Color;
 

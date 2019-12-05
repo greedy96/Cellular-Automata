@@ -1,4 +1,4 @@
-package boardController;
+package BoardController;
 
 import javafx.scene.shape.Rectangle;
 

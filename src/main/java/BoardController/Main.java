@@ -1,4 +1,4 @@
-package boardController;
+package BoardController;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

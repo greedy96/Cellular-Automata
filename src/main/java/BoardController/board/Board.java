@@ -1,5 +1,8 @@
-package boardController.board;
+package BoardController.board;
 
+import BoardController.board.cells.Cell;
+import BoardController.board.cells.Grain;
+import BoardController.board.cells.Inclusion;
 import lombok.Getter;
 
 import java.util.*;
@@ -40,7 +43,7 @@ public class Board {
             x = random.nextInt(rows);
             y = random.nextInt(columns);
             if (matrix[x][y] == null) {
-                matrix[x][y] = new Grain(i, step, null, new Neighbourhood(neighbourhoodEnum));
+                matrix[x][y] = new Grain(i, step, null, neighbourhoodEnum);
                 i++;
             }
         }

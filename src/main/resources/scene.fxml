@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane fx:id="mainView" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/10.0.2-internal"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="boardController.Controller">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoardController.Controller">
     <center>
         <AnchorPane styleClass="boardPane">
             <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" pannable="true"
