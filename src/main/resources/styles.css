@@ -28,6 +28,10 @@ BorderPane {
     -fx-font-weight: bold;
 }
 
+.label.active {
+    -fx-text-fill: green;
+}
+
 .text-field, .combo-box, .button {
     -fx-min-width: 60px;
     -fx-border-color: #ffa726;

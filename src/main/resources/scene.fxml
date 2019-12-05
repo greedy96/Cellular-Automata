@@ -23,12 +23,14 @@
                 <TextField fx:id="numberOfInclusions" layoutX="200.0" layoutY="150.0"/>
                 <TextField fx:id="minRadius" layoutX="60.0" layoutY="250.0"/>
                 <TextField fx:id="maxRadius" layoutX="200.0" layoutY="250.0"/>
-                <ComboBox fx:id="neighbourhood" layoutX="50.0" layoutY="350.0"/>
-                <RadioButton fx:id="nonPeriodicBoundary" layoutX="50.0" layoutY="450.0" mnemonicParsing="false"
+                <CheckBox fx:id="boundaryCurvature" layoutX="25.0" layoutY="325.0"/>
+                <TextField fx:id="thresholdValue" layoutX="200.0" layoutY="368.0"/>
+                <ComboBox fx:id="neighbourhood" layoutX="50.0" layoutY="400.0"/>
+                <RadioButton fx:id="nonPeriodicBoundary" layoutX="50.0" layoutY="500.0" mnemonicParsing="false"
                              text="Non-periodic boundary"/>
-                <RadioButton fx:id="periodicBoundary" layoutX="50.0" layoutY="475.0" mnemonicParsing="false"
+                <RadioButton fx:id="periodicBoundary" layoutX="50.0" layoutY="525.0" mnemonicParsing="false"
                              text="Periodic boundary"/>
-                <Button layoutX="100.0" layoutY="520.0" mnemonicParsing="false" onAction="#generateBoard"
+                <Button layoutX="100.0" layoutY="570.0" mnemonicParsing="false" onAction="#generateBoard"
                         text="Generate"/>
                 <Button layoutX="80.0" layoutY="650.0" mnemonicParsing="false" onAction="#openFile"
                         text="Import from file"/>
@@ -41,8 +43,10 @@
                 <Label layoutX="15.0" layoutY="225.0" text="Inclusions radius"/>
                 <Label layoutX="15.0" layoutY="257.0" text="min"/>
                 <Label layoutX="150.0" layoutY="257.0" text="max"/>
-                <Label layoutX="85.0" layoutY="325.0" text="Neighbourhood:"/>
-                <Label layoutX="50.0" layoutY="425.0" text="Boundary condition:"/>
+                <Label fx:id="boundaryCurvatureLabel" layoutX="60.0" layoutY="325.0" text="Grain Boundary Curvature"/>
+                <Label fx:id="thresholdLabel" layoutX="60.0" layoutY="375.0" text="Threshold value"/>
+                <Label fx:id="neighbourhoodLabel" layoutX="85.0" layoutY="375.0" text="Neighbourhood"/>
+                <Label layoutX="50.0" layoutY="475.0" text="Boundary condition"/>
             </AnchorPane>
             <AnchorPane fx:id="activeControlPane">
                 <Button layoutX="160.0" layoutY="50.0" mnemonicParsing="false" onAction="#saveToFile"

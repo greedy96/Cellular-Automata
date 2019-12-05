@@ -1,6 +1,8 @@
 package BoardController;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -51,6 +53,16 @@ public class Controller {
     public RadioButton periodicBoundary;
     @FXML
     private ComboBox<NeighbourhoodEnum> neighbourhood;
+    @FXML
+    private Label boundaryCurvatureLabel;
+    @FXML
+    private CheckBox boundaryCurvature;
+    @FXML
+    private TextField thresholdValue;
+    @FXML
+    private Label neighbourhoodLabel;
+    @FXML
+    private Label thresholdLabel;
 
     @FXML
     private Button playButton;
@@ -62,6 +74,9 @@ public class Controller {
 
     @FXML
     public void initialize() {
+        thresholdValue.setVisible(false);
+        thresholdLabel.setVisible(false);
+        setChangeListener();
         neighbourhood.setItems(FXCollections.observableArrayList(NeighbourhoodEnum.values()));
         neighbourhood.setValue(NeighbourhoodEnum.VON_NEUMANN);
         ToggleGroup boundaryGroup = new ToggleGroup();
@@ -266,6 +281,28 @@ public class Controller {
             GridRectangle gridRectangle = ((GridRectangle) rectangle);
             gridRectangle.setHeight(rectangleSize);
             gridRectangle.setWidth(rectangleSize);
+        });
+    }
+
+    private void setChangeListener() {
+        boundaryCurvature.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    neighbourhood.setVisible(false);
+                    neighbourhood.setValue(NeighbourhoodEnum.MOORE);
+                    neighbourhoodLabel.setVisible(false);
+                    thresholdValue.setVisible(true);
+                    thresholdLabel.setVisible(true);
+                    boundaryCurvatureLabel.getStyleClass().add("active");
+                } else {
+                    thresholdValue.setVisible(false);
+                    thresholdLabel.setVisible(false);
+                    neighbourhood.setVisible(true);
+                    neighbourhoodLabel.setVisible(true);
+                    boundaryCurvatureLabel.getStyleClass().remove("active");
+                }
+            }
         });
     }
 }
