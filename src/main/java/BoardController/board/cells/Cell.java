@@ -9,11 +9,14 @@ import java.util.Objects;
 public abstract class Cell {
 
     protected int id;
+    int x, y;
     protected int startStep;
     protected Color color;
 
-    protected Cell(int id, int startStep, Color color) {
+    protected Cell(int id, int x, int y, int startStep, Color color) {
         this.id = id;
+        this.x = x;
+        this.y = y;
         this.startStep = startStep;
         this.color = color;
     }

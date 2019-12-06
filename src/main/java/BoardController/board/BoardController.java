@@ -3,6 +3,9 @@ package BoardController.board;
 import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
 import BoardController.board.cells.Inclusion;
+import BoardController.board.neighbour.NonPeriodicNeighbour;
+import BoardController.board.neighbour.ProperNeighbour;
+import BoardController.board.neighbour.findNeighbour.MooreNeighbourFinder;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
@@ -19,7 +22,8 @@ public class BoardController {
 
     public BoardController(int rows, int columns, int numberOfSeeds, int numberOfInclusions, int minRadius,
                            int maxRadius, NeighbourhoodEnum neighbourhoodEnum, boolean periodicBoundary) {
-        board = new Board(rows, columns, periodicBoundary);
+        ProperNeighbour properNeighbour = new NonPeriodicNeighbour(new MooreNeighbourFinder(10));
+        board = new Board(rows, columns, properNeighbour);
         this.periodicBoundary = periodicBoundary;
         currentStep = 0;
         board.setRandomInclusions(numberOfInclusions, minRadius, maxRadius);
@@ -64,7 +68,9 @@ public class BoardController {
                 int step = Integer.parseInt(boardString[2]);
                 NeighbourhoodEnum neighbourhoodEnum = NeighbourhoodEnum.valueOf(boardString[3]);
 
-                board = new Board(rows, columns, periodicBoundary);
+                ProperNeighbour properNeighbour = new NonPeriodicNeighbour(new MooreNeighbourFinder(10));
+                board = new Board(rows, columns, properNeighbour);
+
                 board.setStep(step);
                 currentStep = step;
                 String row;
@@ -78,14 +84,14 @@ public class BoardController {
                     int startStep = Integer.parseInt(grainString[4]);
                     if ("G".equals(type)) {
                         if (!colors.containsKey(id)) {
-                            Grain grain = new Grain(id, startStep, null, neighbourhoodEnum);
+                            Grain grain = new Grain(id, x, y, startStep, null, neighbourhoodEnum);
                             board.getMatrix()[x][y] = grain;
                             colors.put(grain.getId(), grain.getColor());
                         } else {
-                            board.getMatrix()[x][y] = new Grain(id, startStep, colors.get(id), neighbourhoodEnum);
+                            board.getMatrix()[x][y] = new Grain(id, x, y, startStep, colors.get(id), neighbourhoodEnum);
                         }
                     } else if ("I".equals(type)) {
-                        Inclusion inclusion = new Inclusion(id, startStep);
+                        Inclusion inclusion = new Inclusion(id, x, y, startStep);
                         board.getMatrix()[x][y] = inclusion;
                     }
                 }
