@@ -1,8 +1,9 @@
 package BoardController;
 
+import BoardController.board.BoardController;
+import BoardController.board.NeighbourhoodEnum;
+import BoardController.board.cells.Cell;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -14,9 +15,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import BoardController.board.BoardController;
-import BoardController.board.cells.Cell;
-import BoardController.board.NeighbourhoodEnum;
 
 import java.io.File;
 
@@ -291,23 +289,19 @@ public class Controller {
     }
 
     private void setChangeListener() {
-        boundaryCurvature.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    neighbourhood.setVisible(false);
-                    neighbourhood.setValue(NeighbourhoodEnum.MOORE);
-                    neighbourhoodLabel.setVisible(false);
-                    thresholdValue.setVisible(true);
-                    thresholdLabel.setVisible(true);
-                    boundaryCurvatureLabel.getStyleClass().add("active");
-                } else {
-                    thresholdValue.setVisible(false);
-                    thresholdLabel.setVisible(false);
-                    neighbourhood.setVisible(true);
-                    neighbourhoodLabel.setVisible(true);
-                    boundaryCurvatureLabel.getStyleClass().remove("active");
-                }
+        boundaryCurvature.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                neighbourhood.setVisible(false);
+                neighbourhoodLabel.setVisible(false);
+                thresholdValue.setVisible(true);
+                thresholdLabel.setVisible(true);
+                boundaryCurvatureLabel.getStyleClass().add("active");
+            } else {
+                thresholdValue.setVisible(false);
+                thresholdLabel.setVisible(false);
+                neighbourhood.setVisible(true);
+                neighbourhoodLabel.setVisible(true);
+                boundaryCurvatureLabel.getStyleClass().remove("active");
             }
         });
     }

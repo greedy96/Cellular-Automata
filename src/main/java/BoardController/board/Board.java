@@ -7,7 +7,7 @@ import BoardController.board.neighbour.ProperNeighbour;
 import BoardController.board.neighbour.Response;
 import lombok.Getter;
 
-import java.util.*;
+import java.util.Random;
 
 @Getter
 public class Board {

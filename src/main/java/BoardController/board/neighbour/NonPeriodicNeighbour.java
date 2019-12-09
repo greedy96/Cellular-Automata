@@ -25,7 +25,6 @@ public class NonPeriodicNeighbour extends ProperNeighbour {
                         if (matrix[i][j] instanceof Grain) {
                             if (((Grain) matrix[i][j]).checkNeighbourhood(row - i, column - j)) {
                                 neighbourhoodGrains.add((Grain) matrix[i][j]);
-//                                neighbourhoodGrains.merge(((Grain) matrix[i][j]), 1, Integer::sum);
                             }
                         }
                 }

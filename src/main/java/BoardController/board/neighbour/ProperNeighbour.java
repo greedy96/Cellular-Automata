@@ -1,7 +1,6 @@
 package BoardController.board.neighbour;
 
 import BoardController.board.cells.Cell;
-import BoardController.board.cells.Grain;
 import BoardController.board.neighbour.findNeighbour.NeighbourFinder;
 
 public abstract class ProperNeighbour {

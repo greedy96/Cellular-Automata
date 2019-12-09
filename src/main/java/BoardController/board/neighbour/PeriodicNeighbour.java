@@ -37,7 +37,6 @@ public class PeriodicNeighbour extends ProperNeighbour {
 
                             if (((Grain) matrix[periodicRow][periodicColumn]).checkNeighbourhood(tmpRow, tmpColumn)) {
                                 neighbourhoodGrains.add((Grain) matrix[periodicRow][periodicColumn]);
-//                                neighbourhoodGrains.merge((Grain) matrix[periodicRow][periodicColumn], 1, Integer::sum);
                             }
                         }
                     }

@@ -4,7 +4,9 @@ import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
 import BoardController.board.neighbour.Response;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class SimpleNeighbourFinder implements NeighbourFinder {
@@ -28,7 +30,7 @@ public class SimpleNeighbourFinder implements NeighbourFinder {
                 results.values().stream()
                         .map(max -> results.values().stream().filter(value -> value.size() == maxSize)
                                 .map(result -> result.get(0)).collect(Collectors.toList()))
-                .map(grainList -> grainList.size() > 1 ? grainList.get(new Random().nextInt(grainList.size())) : grainList.get(0)).findFirst().orElse(null));
+                        .map(grainList -> grainList.size() > 1 ? grainList.get(new Random().nextInt(grainList.size())) : grainList.get(0)).findFirst().orElse(null));
 
         return response;
     }

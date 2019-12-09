@@ -1,3 +1,7 @@
+.root *{
+    -fx-text-fill: #b0bec5;
+}
+
 BorderPane {
     -fx-pref-width: 920px;
     -fx-pref-height: 690px;
@@ -24,7 +28,6 @@ BorderPane {
 }
 
 .label {
-    -fx-text-fill: #b0bec5;
     -fx-font-weight: bold;
 }
 
@@ -38,7 +41,6 @@ BorderPane {
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
     -fx-background-radius: 10px;
-    -fx-text-fill: #b0bec5;
     -fx-background-color: #455a64;
 }
 
@@ -52,7 +54,6 @@ BorderPane {
 
 .button:hover {
     -fx-border-color: #ffd95b;
-    -fx-text-fill: #b0bec5;
     -fx-background-color: #718792;
 }
 
@@ -62,7 +63,6 @@ BorderPane {
 
 .text-field:focused, .combo-box:focused {
     -fx-border-color: #ffd95b;
-    -fx-text-fill: #b0bec5;
     -fx-background-color: #718792;
 }
 
@@ -72,7 +72,6 @@ BorderPane {
 
 .combo-box .cell {
     -fx-background-color: #1c313a;
-    -fx-text-fill: #b0bec5;
     -fx-alignment: CENTER;
 }
 
@@ -84,13 +83,7 @@ BorderPane {
 }
 
 .combo-box .cell:hover {
-    -fx-text-fill: #b0bec5;
     -fx-background-color: #718792;
-}
-
-
-.radio-button {
-    -fx-text-fill: #b0bec5;
 }
 
 .radio-button:selected {
