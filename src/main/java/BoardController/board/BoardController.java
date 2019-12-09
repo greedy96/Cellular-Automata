@@ -4,8 +4,11 @@ import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
 import BoardController.board.cells.Inclusion;
 import BoardController.board.neighbour.NonPeriodicNeighbour;
+import BoardController.board.neighbour.PeriodicNeighbour;
 import BoardController.board.neighbour.ProperNeighbour;
 import BoardController.board.neighbour.findNeighbour.MooreNeighbourFinder;
+import BoardController.board.neighbour.findNeighbour.NeighbourFinder;
+import BoardController.board.neighbour.findNeighbour.SimpleNeighbourFinder;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
@@ -18,16 +21,31 @@ public class BoardController {
 
     private Board board;
     private int currentStep;
-    private boolean periodicBoundary;
 
     public BoardController(int rows, int columns, int numberOfSeeds, int numberOfInclusions, int minRadius,
                            int maxRadius, NeighbourhoodEnum neighbourhoodEnum, boolean periodicBoundary) {
-        ProperNeighbour properNeighbour = new NonPeriodicNeighbour(new MooreNeighbourFinder(10));
-        board = new Board(rows, columns, properNeighbour);
-        this.periodicBoundary = periodicBoundary;
+        board = new Board(rows, columns, getSimpleNeighbour(periodicBoundary));
         currentStep = 0;
         board.setRandomInclusions(numberOfInclusions, minRadius, maxRadius);
         board.setRandomGrains(numberOfSeeds, neighbourhoodEnum);
+    }
+
+    public BoardController(int rows, int columns, int numberOfSeeds, int numberOfInclusions, int minRadius,
+                           int maxRadius, int probability, boolean periodicBoundary) {
+        board = new Board(rows, columns, getMooreNeighbour(periodicBoundary, probability));
+        currentStep = 0;
+        board.setRandomInclusions(numberOfInclusions, minRadius, maxRadius);
+        board.setRandomGrains(numberOfSeeds, NeighbourhoodEnum.MOORE);
+    }
+
+    private ProperNeighbour getSimpleNeighbour(boolean periodicBoundary) {
+        NeighbourFinder neighbourFinder = new SimpleNeighbourFinder();
+        return periodicBoundary ? new PeriodicNeighbour(neighbourFinder) : new NonPeriodicNeighbour(neighbourFinder);
+    }
+
+    private ProperNeighbour getMooreNeighbour(boolean periodicBoundary, int probability) {
+        NeighbourFinder neighbourFinder = new MooreNeighbourFinder(probability);
+        return periodicBoundary ? new PeriodicNeighbour(neighbourFinder) : new NonPeriodicNeighbour(neighbourFinder);
     }
 
     public BoardController(File file) {

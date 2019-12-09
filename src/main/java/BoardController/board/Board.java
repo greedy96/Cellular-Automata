@@ -4,6 +4,7 @@ import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
 import BoardController.board.cells.Inclusion;
 import BoardController.board.neighbour.ProperNeighbour;
+import BoardController.board.neighbour.Response;
 import lombok.Getter;
 
 import java.util.*;
@@ -56,15 +57,15 @@ public class Board {
         step++;
         boolean lastStepFlag = true;
 
-        Grain grain;
+        Response response;
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
                 if (matrix[row][column] == null) {
-                    grain = properNeighbour.getProperNeighbour(row, column, step);
+                    response = properNeighbour.getProperNeighbour(row, column, step);
 
-                    if (grain != null) {
-                        if (grain.getId() >= 0)
-                            matrix[row][column] = grain.copy(row, column, step);
+                    if (response.isContinue()) {
+                        if (response.getGrainResult() != null)
+                            matrix[row][column] = response.getGrainResult().copy(row, column, step);
                         lastStepFlag = false;
                     }
                 }

@@ -2,6 +2,7 @@ package BoardController.board.neighbour.findNeighbour;
 
 import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
+import BoardController.board.neighbour.Response;
 
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,10 @@ public class MooreNeighbourFinder extends SimpleNeighbourFinder {
     }
 
     @Override
-    public Grain findBestNeighbour(List<Grain> neighbourhoodGrains, int x, int y) {
+    public Response findBestNeighbour(List<Grain> neighbourhoodGrains, int x, int y) {
+        Response response = new Response();
         if (neighbourhoodGrains.size() == 0)
-            return null;
+            return response;
 
         Map<Integer, List<Grain>> results =
                 neighbourhoodGrains.stream().collect(Collectors.groupingBy(Cell::getId));
@@ -39,10 +41,11 @@ public class MooreNeighbourFinder extends SimpleNeighbourFinder {
             if (randomProbability <= probability) {
                 return super.findBestNeighbour(neighbourhoodGrains, x, y);
             } else {
-                grain = new Grain(-1, -1, -1, -1, null, null);
+                response.setResult(Response.ResultEnum.CONTINUE);
             }
         }
-        return grain;
+        response.setGrainResult(grain);
+        return response;
     }
 
     private Grain findNearestNeighbour(List<Grain> results, int x, int y) {

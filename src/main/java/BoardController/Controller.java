@@ -96,8 +96,14 @@ public class Controller {
             int numberOfInclusions = parseTextToInt(this.numberOfInclusions, 0, Math.max(rows, columns));
             int minRadius = parseTextToInt(this.minRadius, 0, Math.max(rows / 2, columns / 2));
             int maxRadius = parseTextToInt(this.maxRadius, minRadius, Math.max(rows / 2, columns / 2));
-            boardController = new BoardController(rows, columns, numberOfSeeds, numberOfInclusions, minRadius, maxRadius,
-                    neighbourhood.getValue(), periodicBoundary.isSelected());
+            if (this.boundaryCurvature.isSelected()) {
+                int probability = parseTextToInt(this.thresholdValue, 1, 100);
+                boardController = new BoardController(rows, columns, numberOfSeeds, numberOfInclusions, minRadius, maxRadius,
+                        probability, periodicBoundary.isSelected());
+            } else {
+                boardController = new BoardController(rows, columns, numberOfSeeds, numberOfInclusions, minRadius, maxRadius,
+                        neighbourhood.getValue(), periodicBoundary.isSelected());
+            }
             currentStep = 0;
             generateBoardView(this.boardController.getMatrix());
             setBoardScale();

@@ -20,5 +20,5 @@ public abstract class ProperNeighbour {
         this.columns = columns;
     }
 
-    public abstract Grain getProperNeighbour(int row, int column, int currentStep);
+    public abstract Response getProperNeighbour(int row, int column, int currentStep);
 }

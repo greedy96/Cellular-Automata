@@ -13,7 +13,7 @@ public class NonPeriodicNeighbour extends ProperNeighbour {
     }
 
     @Override
-    public Grain getProperNeighbour(int row, int column, int currentStep) {
+    public Response getProperNeighbour(int row, int column, int currentStep) {
         int minRow = Math.max(row - 1, 0), maxRow = Math.min(row + 1, rows - 1);
         int minColumn = Math.max(column - 1, 0), maxColumn = Math.min(column + 1, columns - 1);
         List<Grain> neighbourhoodGrains = new LinkedList<>();

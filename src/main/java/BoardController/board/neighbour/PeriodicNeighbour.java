@@ -13,7 +13,7 @@ public class PeriodicNeighbour extends ProperNeighbour {
     }
 
     @Override
-    public Grain getProperNeighbour(int row, int column, int currentStep) {
+    public Response getProperNeighbour(int row, int column, int currentStep) {
         int minRow = row - 1, maxRow = row + 1;
         int minColumn = column - 1, maxColumn = column + 1;
         List<Grain> neighbourhoodGrains = new LinkedList<>();
