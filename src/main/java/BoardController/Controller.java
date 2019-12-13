@@ -235,6 +235,7 @@ public class Controller {
             currentStep = boardController.getCurrentStep();
             generateBoardView(this.boardController.getMatrix());
             controlPane.getChildren().set(0, activeControlPane);
+            boardPane.setAlignment(Pos.CENTER);
         }
     }
 

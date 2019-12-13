@@ -3,12 +3,6 @@ package BoardController.board;
 import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
 import BoardController.board.cells.Inclusion;
-import BoardController.board.neighbour.NonPeriodicNeighbour;
-import BoardController.board.neighbour.PeriodicNeighbour;
-import BoardController.board.neighbour.ProperNeighbour;
-import BoardController.board.neighbour.findNeighbour.MooreNeighbourFinder;
-import BoardController.board.neighbour.findNeighbour.NeighbourFinder;
-import BoardController.board.neighbour.findNeighbour.SimpleNeighbourFinder;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
@@ -24,28 +18,18 @@ public class BoardController {
 
     public BoardController(int rows, int columns, int numberOfSeeds, int numberOfInclusions, int minRadius,
                            int maxRadius, NeighbourhoodEnum neighbourhoodEnum, boolean periodicBoundary) {
-        board = new Board(rows, columns, getSimpleNeighbour(periodicBoundary));
+        board = new Board(rows, columns, periodicBoundary, neighbourhoodEnum);
         currentStep = 0;
         board.setRandomInclusions(numberOfInclusions, minRadius, maxRadius);
-        board.setRandomGrains(numberOfSeeds, neighbourhoodEnum);
+        board.setRandomGrains(numberOfSeeds);
     }
 
     public BoardController(int rows, int columns, int numberOfSeeds, int numberOfInclusions, int minRadius,
                            int maxRadius, int probability, boolean periodicBoundary) {
-        board = new Board(rows, columns, getMooreNeighbour(periodicBoundary, probability));
+        board = new Board(rows, columns, periodicBoundary, probability);
         currentStep = 0;
         board.setRandomInclusions(numberOfInclusions, minRadius, maxRadius);
-        board.setRandomGrains(numberOfSeeds, NeighbourhoodEnum.MOORE);
-    }
-
-    private ProperNeighbour getSimpleNeighbour(boolean periodicBoundary) {
-        NeighbourFinder neighbourFinder = new SimpleNeighbourFinder();
-        return periodicBoundary ? new PeriodicNeighbour(neighbourFinder) : new NonPeriodicNeighbour(neighbourFinder);
-    }
-
-    private ProperNeighbour getMooreNeighbour(boolean periodicBoundary, int probability) {
-        NeighbourFinder neighbourFinder = new MooreNeighbourFinder(probability);
-        return periodicBoundary ? new PeriodicNeighbour(neighbourFinder) : new NonPeriodicNeighbour(neighbourFinder);
+        board.setRandomGrains(numberOfSeeds);
     }
 
     public BoardController(File file) {
@@ -84,10 +68,16 @@ public class BoardController {
                 int rows = Integer.parseInt(boardString[0]);
                 int columns = Integer.parseInt(boardString[1]);
                 int step = Integer.parseInt(boardString[2]);
-                NeighbourhoodEnum neighbourhoodEnum = NeighbourhoodEnum.valueOf(boardString[3]);
-
-                ProperNeighbour properNeighbour = new NonPeriodicNeighbour(new MooreNeighbourFinder(10));
-                board = new Board(rows, columns, properNeighbour);
+                boolean periodicBoundary = Boolean.parseBoolean(boardString[3]);
+                boolean curvatureBoundary = Boolean.parseBoolean(boardString[4]);
+                NeighbourhoodEnum neighbourhoodEnum = NeighbourhoodEnum.MOORE;
+                if (curvatureBoundary) {
+                    int probability = Integer.parseInt(boardString[5]);
+                    board = new Board(rows, columns, periodicBoundary, probability);
+                } else {
+                    neighbourhoodEnum = NeighbourhoodEnum.valueOf(boardString[5]);
+                    board = new Board(rows, columns, periodicBoundary, neighbourhoodEnum);
+                }
 
                 board.setStep(step);
                 currentStep = step;
@@ -130,7 +120,11 @@ public class BoardController {
                     .append(",")
                     .append(String.valueOf(board.getStep()))
                     .append(",")
-                    .append(board.getNeighbourhoodEnum().name())
+                    .append(String.valueOf(board.isPeriodicBoundary()))
+                    .append(",")
+                    .append(String.valueOf(board.isCurvatureBoundary()))
+                    .append(",")
+                    .append(board.isCurvatureBoundary() ? String.valueOf(board.getProbability()) : board.getNeighbourhoodEnum().name())
                     .append("\n");
 
             for (int i = 0; i < board.getRows(); i++) {
