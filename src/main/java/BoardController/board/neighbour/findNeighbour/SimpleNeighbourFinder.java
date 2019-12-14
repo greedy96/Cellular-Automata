@@ -13,8 +13,9 @@ public class SimpleNeighbourFinder implements NeighbourFinder {
 
     @Override
     public Response findBestNeighbour(List<Grain> neighbourhoodGrains, int x, int y) {
+        Response response = new Response();
         if (neighbourhoodGrains.size() == 0)
-            return null;
+            return response;
 
         Map<Integer, List<Grain>> results =
                 neighbourhoodGrains.stream().collect(Collectors.groupingBy(Cell::getId));
@@ -25,7 +26,6 @@ public class SimpleNeighbourFinder implements NeighbourFinder {
                     return Integer.compare(s1, s2);
                 })).map(entry -> entry.getValue().size()).orElse(0);
 
-        Response response = new Response();
         response.setGrainResult(maxSize == 0 ? null :
                 results.values().stream()
                         .map(max -> results.values().stream().filter(value -> value.size() == maxSize)
