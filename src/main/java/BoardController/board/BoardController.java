@@ -61,7 +61,7 @@ public class BoardController {
     public void openStateFromFile(File file) {
         try {
             BufferedReader csvReader = new BufferedReader(new FileReader(file));
-
+            int currentPhase = 0;
             String firstRow = csvReader.readLine();
             if (firstRow != null) {
                 String[] boardString = firstRow.split(",");
@@ -90,19 +90,24 @@ public class BoardController {
                     int y = Integer.parseInt(grainString[2]);
                     int id = Integer.parseInt(grainString[3]);
                     int startStep = Integer.parseInt(grainString[4]);
+                    int phase = Integer.parseInt(boardString[5]);
+                    if (phase > currentPhase) {
+                        currentPhase = phase;
+                    }
                     if ("G".equals(type)) {
                         if (!colors.containsKey(id)) {
-                            Grain grain = new Grain(id, x, y, startStep, null, neighbourhoodEnum);
+                            Grain grain = new Grain(id, x, y, startStep, null, neighbourhoodEnum, phase);
                             board.getMatrix()[x][y] = grain;
                             colors.put(grain.getId(), grain.getColor());
                         } else {
-                            board.getMatrix()[x][y] = new Grain(id, x, y, startStep, colors.get(id), neighbourhoodEnum);
+                            board.getMatrix()[x][y] = new Grain(id, x, y, startStep, colors.get(id), neighbourhoodEnum, phase);
                         }
                     } else if ("I".equals(type)) {
-                        Inclusion inclusion = new Inclusion(id, x, y, startStep);
+                        Inclusion inclusion = new Inclusion(id, x, y, startStep, phase);
                         board.getMatrix()[x][y] = inclusion;
                     }
                 }
+                board.setPhase(currentPhase);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -144,6 +149,8 @@ public class BoardController {
                                 .append(String.valueOf(cell.getId()))
                                 .append(",")
                                 .append(String.valueOf(cell.getStartStep()))
+                                .append(",")
+                                .append(String.valueOf(cell.getCellPhase()))
                                 .append("\n");
                     }
                 }

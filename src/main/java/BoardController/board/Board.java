@@ -11,6 +11,7 @@ import BoardController.board.neighbour.findNeighbour.MooreNeighbourFinder;
 import BoardController.board.neighbour.findNeighbour.NeighbourFinder;
 import BoardController.board.neighbour.findNeighbour.SimpleNeighbourFinder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Random;
 
@@ -25,13 +26,15 @@ public class Board {
     private NeighbourhoodEnum neighbourhoodEnum;
     private int probability = 100;
     private ProperNeighbour properNeighbour;
+    @Setter
+    private int phase;
 
     public Board(int rows, int columns, boolean periodicBoundary, NeighbourhoodEnum neighbourhoodEnum) {
         this.setBoard(rows, columns);
         this.periodicBoundary = periodicBoundary;
         this.neighbourhoodEnum = neighbourhoodEnum;
         this.properNeighbour = this.getSimpleNeighbour(periodicBoundary);
-        this.properNeighbour.setMatrix(matrix, rows, columns);
+        this.properNeighbour.setMatrix(matrix, rows, columns, phase);
     }
 
     public Board(int rows, int columns, boolean periodicBoundary, int probability) {
@@ -41,7 +44,7 @@ public class Board {
         this.probability = probability;
         this.neighbourhoodEnum = NeighbourhoodEnum.MOORE;
         this.properNeighbour = this.getMooreNeighbour(periodicBoundary, probability);
-        this.properNeighbour.setMatrix(matrix, rows, columns);
+        this.properNeighbour.setMatrix(matrix, rows, columns, phase);
     }
 
     private void setBoard(int rows, int columns) {
@@ -78,7 +81,7 @@ public class Board {
             x = random.nextInt(rows);
             y = random.nextInt(columns);
             if (matrix[x][y] == null) {
-                matrix[x][y] = new Grain(i, x, y, step, null, neighbourhoodEnum);
+                matrix[x][y] = new Grain(i, x, y, step, null, neighbourhoodEnum, phase);
                 i++;
             }
         }
@@ -123,7 +126,7 @@ public class Board {
                     radius = minRadius;
                 else
                     radius = random.nextInt(maxRadius - minRadius) + minRadius;
-                fillCircle(new Inclusion(i, x, y, step), x, y, radius);
+                fillCircle(new Inclusion(i, x, y, step, phase), x, y, radius);
                 i++;
             }
         }

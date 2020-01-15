@@ -11,8 +11,8 @@ public class Grain extends Cell {
     private NeighbourhoodEnum neighbourhoodType;
     private NeighbourhoodEnum initNeighbourhoodType;
 
-    public Grain(int id, int x, int y, int startStep, Color color, NeighbourhoodEnum initNeighbourhoodType) {
-        super(id, x, y, startStep, color);
+    public Grain(int id, int x, int y, int startStep, Color color, NeighbourhoodEnum initNeighbourhoodType, int phase) {
+        super(id, x, y, startStep, color, phase);
 
         if (color == null) {
             this.color = generateColor();
@@ -55,7 +55,7 @@ public class Grain extends Cell {
     }
 
     public Grain copy(int x, int y, int startStep) {
-        return new Grain(id, x, y, startStep, color, initNeighbourhoodType);
+        return new Grain(id, x, y, startStep, color, initNeighbourhoodType, cellPhase);
     }
 
     public String toString() {

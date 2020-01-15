@@ -12,13 +12,16 @@ public abstract class Cell {
     int x, y;
     protected int startStep;
     protected Color color;
+    protected boolean finals = false;
+    protected int cellPhase;
 
-    protected Cell(int id, int x, int y, int startStep, Color color) {
+    protected Cell(int id, int x, int y, int startStep, Color color, int phase) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.startStep = startStep;
         this.color = color;
+        this.cellPhase = phase;
     }
 
     @Override

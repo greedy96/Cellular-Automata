@@ -1,5 +1,6 @@
 package BoardController.board.neighbour;
 
+import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
 import BoardController.board.neighbour.findNeighbour.NeighbourFinder;
 
@@ -30,13 +31,15 @@ public class PeriodicNeighbour extends ProperNeighbour {
                 else if (j >= columns) periodicColumn = j - columns;
 
                 if (periodicRow != row || periodicColumn != column) {
-                    if (matrix[periodicRow][periodicColumn] != null && matrix[periodicRow][periodicColumn].getStartStep() != currentStep) {
-                        if (matrix[periodicRow][periodicColumn] instanceof Grain) {
+                    Cell currentCell = matrix[periodicRow][periodicColumn];
+                    if (currentCell != null && currentCell.getCellPhase() == phase
+                            && currentCell.getStartStep() != currentStep) {
+                        if (currentCell instanceof Grain) {
                             int tmpRow = Math.max(Math.min(row - periodicRow, 1), -1);
                             int tmpColumn = Math.max(Math.min(column - periodicColumn, 1), -1);
 
-                            if (((Grain) matrix[periodicRow][periodicColumn]).checkNeighbourhood(tmpRow, tmpColumn)) {
-                                neighbourhoodGrains.add((Grain) matrix[periodicRow][periodicColumn]);
+                            if (((Grain) currentCell).checkNeighbourhood(tmpRow, tmpColumn)) {
+                                neighbourhoodGrains.add((Grain) currentCell);
                             }
                         }
                     }

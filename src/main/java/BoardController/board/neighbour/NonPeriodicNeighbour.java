@@ -1,5 +1,6 @@
 package BoardController.board.neighbour;
 
+import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
 import BoardController.board.neighbour.findNeighbour.NeighbourFinder;
 
@@ -21,10 +22,11 @@ public class NonPeriodicNeighbour extends ProperNeighbour {
         for (int i = minRow; i <= maxRow; i++) {
             for (int j = minColumn; j <= maxColumn; j++) {
                 if (i != row || j != column) {
-                    if (matrix[i][j] != null && matrix[i][j].getStartStep() != currentStep)
-                        if (matrix[i][j] instanceof Grain) {
-                            if (((Grain) matrix[i][j]).checkNeighbourhood(row - i, column - j)) {
-                                neighbourhoodGrains.add((Grain) matrix[i][j]);
+                    Cell currentCell = matrix[i][j];
+                    if (currentCell != null && currentCell.getCellPhase() == phase && currentCell.getStartStep() != currentStep)
+                        if (currentCell instanceof Grain) {
+                            if (((Grain) currentCell).checkNeighbourhood(row - i, column - j)) {
+                                neighbourhoodGrains.add((Grain) currentCell);
                             }
                         }
                 }
