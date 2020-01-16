@@ -10,19 +10,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.File;
 import java.util.HashSet;
@@ -79,6 +75,16 @@ public class Controller {
 
     @FXML
     public ListView<SelectedItem> listOfSelection;
+    @FXML
+    public TextField numberOfSeedsDP;
+    @FXML
+    public TextField numberOfInclusionsDP;
+    @FXML
+    public TextField minRadiusDP;
+    @FXML
+    public TextField maxRadiusDP;
+    @FXML
+    public CheckBox featureDP;
 
     private BoardController boardController;
     private Thread autoTask = null;
@@ -162,7 +168,7 @@ public class Controller {
     }
 
     @FXML
-    public void goBack() {
+    public void resetView() {
         controlPane.getChildren().set(0, startControlPane);
         if (autoTask != null) {
             autoTask.interrupt();
@@ -191,12 +197,16 @@ public class Controller {
             cellView = new GridRectangle(null, GridRectangle.CellType.EMPTY, Color.LIGHTGRAY, i, j, size);
             cellView.setFill(Color.LIGHTGRAY);
         } else {
-            if (cell instanceof Grain) {
-                cellView = new GridRectangle(cell.getId(), GridRectangle.CellType.GRAIN, cell.getColor(), i, j, size);
-            } else {
-                cellView = new GridRectangle(cell.getId(), GridRectangle.CellType.INCLUSION, cell.getColor(), i, j, size);
+            Color color = cell.getColor();
+            if (cell.getCellPhase() < this.boardController.getCurrentPhase()) {
+                color = mixColor(cell.getColor(), Color.HOTPINK, 25);
             }
-            cellView.setFill(cell.getColor());
+            if (cell instanceof Grain) {
+                cellView = new GridRectangle(cell.getId(), GridRectangle.CellType.GRAIN, color, i, j, size);
+            } else {
+                cellView = new GridRectangle(cell.getId(), GridRectangle.CellType.INCLUSION, color, i, j, size);
+            }
+            cellView.setFill(color);
         }
 
         return cellView;
@@ -207,9 +217,14 @@ public class Controller {
             GridRectangle gridRectangle = ((GridRectangle) rectangle);
             Cell cell = matrix[gridRectangle.getRow()][gridRectangle.getColumn()];
             if (cell != null) {
-                if (cell.getStartStep() <= currentStep)
-                    gridRectangle.setNewGrid(cell.getId(), cell instanceof Grain ? GridRectangle.CellType.GRAIN : GridRectangle.CellType.INCLUSION, cell.getColor());
-                else
+                if (cell.getStartStep() <= currentStep) {
+                    Color color = cell.getColor();
+                    if (cell.getCellPhase() < boardController.getCurrentPhase()) {
+                        color = mixColor(cell.getColor(), Color.HOTPINK, 25);
+                    }
+                    gridRectangle.setNewGrid(cell.getId(), cell instanceof Grain ? GridRectangle.CellType.GRAIN :
+                            GridRectangle.CellType.INCLUSION, color);
+                } else
                     gridRectangle.setNewGrid(null, GridRectangle.CellType.EMPTY, Color.LIGHTGRAY);
             }
         });
@@ -333,6 +348,17 @@ public class Controller {
         });
     }
 
+    ChangeListener<SelectedItem> changeListener = new ChangeListener<SelectedItem>() {
+        @Override
+        public void changed(ObservableValue<? extends SelectedItem> observable, SelectedItem oldValue, SelectedItem newValue) {
+            // Your action here
+            if (newValue != null) {
+                newValue.toggle();
+                setNonTransparentRectangle(newValue.isOn(), newValue.getId(), newValue.getType());
+            }
+        }
+    };
+
     public void goToGrainSelector() {
 
         Set<Grain> grains = new HashSet<>();
@@ -366,14 +392,7 @@ public class Controller {
 
         listOfSelection.setCellFactory((ListView<SelectedItem> l) -> new SelectedList());
 
-        listOfSelection.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SelectedItem>() {
-            @Override
-            public void changed(ObservableValue<? extends SelectedItem> observable, SelectedItem oldValue, SelectedItem newValue) {
-                // Your action here
-                newValue.toggle();
-                setNonTransparentRectangle(newValue.isOn(), newValue.getId(), newValue.getType());
-            }
-        });
+        listOfSelection.getSelectionModel().selectedItemProperty().addListener(changeListener);
 
         setControlPane(selectorPane);
     }
@@ -396,5 +415,31 @@ public class Controller {
         double g = Math.abs((color1.getGreen() * percentage + color2.getGreen() * (100 - percentage)) / 100);
         double b = Math.abs((color1.getBlue() * percentage + color2.getBlue() * (100 - percentage)) / 100);
         return new Color(r, g, b, 1.0);
+    }
+
+    @FXML
+    public void goBack() {
+        listOfSelection.getSelectionModel().selectedItemProperty().removeListener(changeListener);
+        boardPane.getChildren().forEach((rectangle) -> {
+            GridRectangle gridRectangle = ((GridRectangle) rectangle);
+            gridRectangle.setFill(gridRectangle.getColor());
+        });
+        controlPane.getChildren().set(0, activeControlPane);
+    }
+
+    @FXML
+    public void secondGG() {
+        try {
+            int numberOfSeeds = parseTextToInt(this.numberOfSeedsDP, 0, 100);
+            int numberOfInclusions = parseTextToInt(this.numberOfInclusionsDP, 0, 20);
+            int minRadius = parseTextToInt(this.minRadiusDP, 0, 20);
+            int maxRadius = parseTextToInt(this.maxRadiusDP, minRadius, 20);
+            this.boardController.setSecondGG(listOfSelection.getItems().subList(0, listOfSelection.getItems().size()),
+                    featureDP.isSelected(), numberOfSeeds, numberOfInclusions, minRadius, maxRadius);
+            listOfSelection.getSelectionModel().selectedItemProperty().removeListener(changeListener);
+            generateBoardView(this.boardController.getMatrix());
+            controlPane.getChildren().set(0, activeControlPane);
+        } catch (NumberFormatException ignored) {
+        }
     }
 }

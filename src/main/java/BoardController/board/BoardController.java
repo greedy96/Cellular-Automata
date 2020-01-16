@@ -1,5 +1,7 @@
 package BoardController.board;
 
+import BoardController.GridRectangle;
+import BoardController.SelectedItem;
 import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
 import BoardController.board.cells.Inclusion;
@@ -9,7 +11,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BoardController {
 
@@ -207,5 +212,26 @@ public class BoardController {
 
     public Cell[][] getMatrix() {
         return this.board.getMatrix();
+    }
+
+    public void setSecondGG(List<SelectedItem> selectedItemList, boolean setDP, int numberOfSeeds, int numberOfInclusions, int minRadius, int maxRadius) {
+        Set<Integer> grainsSet =
+                selectedItemList.stream().filter(selectedItem -> !selectedItem.onProperty().get() && selectedItem.getType() == GridRectangle.CellType.GRAIN)
+                        .map(selectedItem -> selectedItem.getId()).collect(Collectors.toSet());
+        Set<Integer> inclusionsSet =
+                selectedItemList.stream().filter(selectedItem -> !selectedItem.onProperty().get() && selectedItem.getType() == GridRectangle.CellType.INCLUSION)
+                        .map(selectedItem -> selectedItem.getId()).collect(Collectors.toSet());
+        this.board.deleteGrains(grainsSet, inclusionsSet);
+
+        if (setDP) {
+            this.board.setNextPhase();
+        }
+
+        this.board.setRandomInclusions(numberOfInclusions, minRadius, maxRadius);
+        this.board.setRandomGrains(numberOfSeeds);
+    }
+
+    public int getCurrentPhase() {
+        return this.board.getPhase();
     }
 }

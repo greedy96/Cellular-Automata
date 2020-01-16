@@ -22,4 +22,8 @@ public abstract class ProperNeighbour {
     }
 
     public abstract Response getProperNeighbour(int row, int column, int currentStep);
+
+    public void setNewPhase(int phase) {
+        this.phase = phase;
+    }
 }

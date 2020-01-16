@@ -14,7 +14,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("scene.fxml")));
         primaryStage.setTitle("Cellular Automata");
-        primaryStage.setScene(new Scene(root, 1050, 750));
+        primaryStage.setScene(new Scene(root, 1050, 720));
         primaryStage.show();
     }
 

@@ -31,7 +31,7 @@ public class GridRectangle extends Rectangle {
         return color;
     }
 
-    public void setNewGrid(Integer gridId, CellType cellType, Color color){
+    public void setNewGrid(Integer gridId, CellType cellType, Color color) {
         this.gridId = gridId;
         this.cellType = cellType;
         this.color = color;

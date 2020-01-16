@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Random;
+import java.util.Set;
 
 @Getter
 public class Board {
@@ -27,7 +28,8 @@ public class Board {
     private int probability = 100;
     private ProperNeighbour properNeighbour;
     @Setter
-    private int phase;
+    private int phase = 0;
+    int lastGrainId = 0, lastInclusionId = 0;
 
     public Board(int rows, int columns, boolean periodicBoundary, NeighbourhoodEnum neighbourhoodEnum) {
         this.setBoard(rows, columns);
@@ -81,10 +83,11 @@ public class Board {
             x = random.nextInt(rows);
             y = random.nextInt(columns);
             if (matrix[x][y] == null) {
-                matrix[x][y] = new Grain(i, x, y, step, null, neighbourhoodEnum, phase);
+                matrix[x][y] = new Grain(lastGrainId + i, x, y, step, null, neighbourhoodEnum, phase);
                 i++;
             }
         }
+        lastGrainId += i + 1;
     }
 
     public boolean generateNextStep() {
@@ -126,10 +129,11 @@ public class Board {
                     radius = minRadius;
                 else
                     radius = random.nextInt(maxRadius - minRadius) + minRadius;
-                fillCircle(new Inclusion(i, x, y, step, phase), x, y, radius);
+                fillCircle(new Inclusion(lastInclusionId + i, x, y, step, phase), x, y, radius);
                 i++;
             }
         }
+        lastInclusionId += i + 1;
     }
 
     private void fillCircle(Inclusion inclusion, int x, int y, int r) {
@@ -142,5 +146,29 @@ public class Board {
                 }
             }
         }
+    }
+
+    public void deleteGrains(Set<Integer> grainsIds, Set<Integer> inclusionsIds) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                Cell cell = matrix[i][j];
+                if (cell != null) {
+                    if (cell instanceof Grain) {
+                        if (grainsIds.contains(cell.getId()))
+                            matrix[i][j] = null;
+                    } else {
+                        if (inclusionsIds.contains(cell.getId())) {
+                            matrix[i][j] = null;
+                        }
+                    }
+                }
+            }
+        }
+        this.lastStep = -1;
+    }
+
+    public void setNextPhase() {
+        this.phase++;
+        this.properNeighbour.setNewPhase(phase);
     }
 }

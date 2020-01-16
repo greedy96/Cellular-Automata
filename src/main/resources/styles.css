@@ -99,10 +99,10 @@ BorderPane {
     -fx-background-radius: 10px;
 }
 
-.list-view .list-cell{
+.list-view .list-cell {
     -fx-background-color: #455a64;
 }
 
-/*.list-view .list-cell:selected{*/
-/*    -fx-background-color: #455a64;*/
-/*}*/
+.list-view .list-cell:selected {
+    -fx-background-color: #455a64;
+}
