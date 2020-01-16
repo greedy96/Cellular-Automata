@@ -55,14 +55,20 @@
                         text="Save as image"/>
                 <Button layoutX="160.0" layoutY="150.0" mnemonicParsing="false" onAction="#scaleUp" text="+"/>
                 <Button layoutX="40.0" layoutY="150.0" mnemonicParsing="false" onAction="#scaleDown" text="-"/>
-                <Button layoutX="160.0" layoutY="300.0" mnemonicParsing="false" onAction="#generateNextStep"
+                <Button layoutX="160.0" layoutY="250.0" mnemonicParsing="false" onAction="#generateNextStep"
                         text="Next"/>
-                <Button layoutX="40.0" layoutY="300.0" mnemonicParsing="false" onAction="#getPreviousStep"
+                <Button layoutX="40.0" layoutY="250.0" mnemonicParsing="false" onAction="#getPreviousStep"
                         text="Previous"/>
-                <Button fx:id="playButton" layoutX="160.0" layoutY="400.0" mnemonicParsing="false" onAction="#playAuto"
+                <Button fx:id="playButton" layoutX="160.0" layoutY="300.0" mnemonicParsing="false" onAction="#playAuto"
                         text="Auto"/>
-                <Button layoutX="40.0" layoutY="400.0" mnemonicParsing="false" onAction="#pauseAuto" text="Pause"/>
-                <Button layoutX="100.0" layoutY="550.0" mnemonicParsing="false" onAction="#goBack" text="Reset"/>
+                <Button layoutX="40.0" layoutY="300.0" mnemonicParsing="false" onAction="#pauseAuto" text="Pause"/>
+                <Button layoutX="80.0" layoutY="450.0" mnemonicParsing="false" onAction="#goToGrainSelector" text="Remove grains"/>
+                <Button layoutX="100.0" layoutY="600.0" mnemonicParsing="false" onAction="#goBack" text="Reset"/>
+            </AnchorPane>
+            <AnchorPane fx:id="selectorPane">
+                <ListView fx:id="listOfSelection" styleClass="list-view">
+                </ListView>
+                
             </AnchorPane>
         </AnchorPane>
     </right>

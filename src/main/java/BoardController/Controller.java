@@ -3,20 +3,30 @@ package BoardController;
 import BoardController.board.BoardController;
 import BoardController.board.NeighbourhoodEnum;
 import BoardController.board.cells.Cell;
+import BoardController.board.cells.Grain;
+import BoardController.board.cells.Inclusion;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Controller {
 
@@ -30,6 +40,8 @@ public class Controller {
     public AnchorPane activeControlPane;
     @FXML
     public ScrollPane scrollPane;
+    @FXML
+    public AnchorPane selectorPane;
     @FXML
     private GridPane boardPane;
 
@@ -65,10 +77,18 @@ public class Controller {
     @FXML
     private Button playButton;
 
+    @FXML
+    public ListView<SelectedItem> listOfSelection;
+
     private BoardController boardController;
     private Thread autoTask = null;
     private Integer currentStep;
     private double rectangleSize;
+
+    private void setControlPane(AnchorPane anchorPane) {
+        controlPane.getChildren().clear();
+        controlPane.getChildren().add(anchorPane);
+    }
 
     @FXML
     public void initialize() {
@@ -81,8 +101,7 @@ public class Controller {
         periodicBoundary.setToggleGroup(boundaryGroup);
         nonPeriodicBoundary.setToggleGroup(boundaryGroup);
         nonPeriodicBoundary.fire();
-        controlPane.getChildren().clear();
-        controlPane.getChildren().setAll(startControlPane);
+        setControlPane(startControlPane);
     }
 
     @FXML
@@ -105,7 +124,7 @@ public class Controller {
             currentStep = 0;
             generateBoardView(this.boardController.getMatrix());
             setBoardScale();
-            controlPane.getChildren().set(0, activeControlPane);
+            setControlPane(activeControlPane);
             boardPane.setAlignment(Pos.CENTER);
         } catch (NumberFormatException ignored) {
         }
@@ -167,11 +186,18 @@ public class Controller {
     }
 
     private GridRectangle getGrainView(Cell cell, int i, int j, double size) {
-        GridRectangle cellView = new GridRectangle(i, j, size);
-        if (cell == null)
+        GridRectangle cellView;
+        if (cell == null) {
+            cellView = new GridRectangle(null, GridRectangle.CellType.EMPTY, Color.LIGHTGRAY, i, j, size);
             cellView.setFill(Color.LIGHTGRAY);
-        else
+        } else {
+            if (cell instanceof Grain) {
+                cellView = new GridRectangle(cell.getId(), GridRectangle.CellType.GRAIN, cell.getColor(), i, j, size);
+            } else {
+                cellView = new GridRectangle(cell.getId(), GridRectangle.CellType.INCLUSION, cell.getColor(), i, j, size);
+            }
             cellView.setFill(cell.getColor());
+        }
 
         return cellView;
     }
@@ -182,9 +208,9 @@ public class Controller {
             Cell cell = matrix[gridRectangle.getRow()][gridRectangle.getColumn()];
             if (cell != null) {
                 if (cell.getStartStep() <= currentStep)
-                    gridRectangle.setFill(cell.getColor());
+                    gridRectangle.setNewGrid(cell.getId(), cell instanceof Grain ? GridRectangle.CellType.GRAIN : GridRectangle.CellType.INCLUSION, cell.getColor());
                 else
-                    gridRectangle.setFill(Color.LIGHTGRAY);
+                    gridRectangle.setNewGrid(null, GridRectangle.CellType.EMPTY, Color.LIGHTGRAY);
             }
         });
     }
@@ -305,5 +331,70 @@ public class Controller {
                 boundaryCurvatureLabel.getStyleClass().remove("active");
             }
         });
+    }
+
+    public void goToGrainSelector() {
+
+        Set<Grain> grains = new HashSet<>();
+        Set<Inclusion> inclusions = new HashSet<>();
+
+        Cell[][] matrix = this.boardController.getMatrix();
+        int rows = matrix.length, columns = matrix[0].length;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                Cell cell = matrix[i][j];
+                if (cell != null) {
+                    if (cell instanceof Grain) {
+                        grains.add((Grain) cell);
+                    } else if (cell instanceof Inclusion) {
+                        inclusions.add((Inclusion) cell);
+                    }
+                }
+            }
+        }
+
+        listOfSelection.getItems().clear();
+
+        grains.forEach(grain -> {
+            listOfSelection.getItems().add(new SelectedItem(GridRectangle.CellType.GRAIN, grain.getId(), grain.getColor()));
+        });
+
+        inclusions.forEach(inclusion -> {
+            listOfSelection.getItems().add(new SelectedItem(GridRectangle.CellType.INCLUSION, inclusion.getId(), inclusion.getColor()));
+        });
+
+        listOfSelection.setCellFactory((ListView<SelectedItem> l) -> new SelectedList());
+
+        listOfSelection.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SelectedItem>() {
+            @Override
+            public void changed(ObservableValue<? extends SelectedItem> observable, SelectedItem oldValue, SelectedItem newValue) {
+                // Your action here
+                newValue.toggle();
+                setNonTransparentRectangle(newValue.isOn(), newValue.getId(), newValue.getType());
+            }
+        });
+
+        setControlPane(selectorPane);
+    }
+
+    private void setNonTransparentRectangle(boolean on, int id, GridRectangle.CellType type) {
+        boardPane.getChildren().forEach((rectangle) -> {
+            GridRectangle gridRectangle = ((GridRectangle) rectangle);
+            if (gridRectangle.isProperRectangle(id, type)) {
+                if (!on) {
+                    gridRectangle.setFill(mixColor(gridRectangle.getColor(), Color.LIGHTGRAY, 20));
+                } else {
+                    gridRectangle.setFill(gridRectangle.getColor());
+                }
+            }
+        });
+    }
+
+    private Color mixColor(Color color1, Color color2, int percentage) {
+        double r = Math.abs((color1.getRed() * percentage + color2.getRed() * (100 - percentage)) / 100);
+        double g = Math.abs((color1.getGreen() * percentage + color2.getGreen() * (100 - percentage)) / 100);
+        double b = Math.abs((color1.getBlue() * percentage + color2.getBlue() * (100 - percentage)) / 100);
+        return new Color(r, g, b, 1.0);
     }
 }

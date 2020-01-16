@@ -1,4 +1,4 @@
-.root *{
+.root * {
     -fx-text-fill: #b0bec5;
 }
 
@@ -90,3 +90,19 @@ BorderPane {
     -fx-text-fill: green;
     -fx-font-weight: bold;
 }
+
+.list-view {
+    -fx-background-color: #455a64;
+    -fx-border-color: #ffa726;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-background-radius: 10px;
+}
+
+.list-view .list-cell{
+    -fx-background-color: #455a64;
+}
+
+/*.list-view .list-cell:selected{*/
+/*    -fx-background-color: #455a64;*/
+/*}*/
