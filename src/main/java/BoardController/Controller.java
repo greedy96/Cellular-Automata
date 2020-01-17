@@ -86,6 +86,8 @@ public class Controller {
     @FXML
     public CheckBox featureDP;
 
+    GridRectangle[][] boardView;
+
     private BoardController boardController;
     private Thread autoTask = null;
     private Integer currentStep;
@@ -155,6 +157,8 @@ public class Controller {
         if (nextStep != currentStep) {
             currentStep = nextStep;
             changeBordView(this.boardController.getMatrix());
+        } else {
+            Platform.runLater(this::generateBoundaryView);
         }
     }
 
@@ -178,15 +182,13 @@ public class Controller {
 
     private void generateBoardView(Cell[][] matrix) {
         boardPane.getChildren().clear();
+        boardView = new GridRectangle[matrix.length][matrix[0].length];
         int rows = matrix.length, columns = matrix[0].length;
         rectangleSize = Math.round(Math.max(1.0, 700.0 / Math.min(rows, columns)));
-
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                GridRectangle cell = getGrainView(matrix[i][j], i, j, rectangleSize);
-                GridPane.setRowIndex(cell, i);
-                GridPane.setColumnIndex(cell, j);
-                boardPane.getChildren().add(cell);
+                boardView[i][j] = getGrainView(matrix[i][j], i, j, rectangleSize);
+                boardPane.add(boardView[i][j], j, i);
             }
         }
     }
@@ -228,6 +230,35 @@ public class Controller {
                     gridRectangle.setNewGrid(null, GridRectangle.CellType.EMPTY, Color.LIGHTGRAY);
             }
         });
+    }
+
+    private void generateBoundaryView() {
+        int boundaryCounter = 0, area = 0;
+        Set<Integer> grainIds = new HashSet<>();
+        int rows = boardView.length, columns = boardView[0].length;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                GridRectangle currentRectangle = boardView[i][j];
+                if (currentRectangle.isGrain()) {
+                    grainIds.add(currentRectangle.getGridId());
+                    area++;
+                }
+                for (int k = Math.max(0, i - 1); k <= Math.min(rows - 1, i + 1); k++) {
+                    for (int l = Math.max(0, j - 1); l <= Math.min(columns - 1, j + 1); l++) {
+                        if (currentRectangle.doYouBoundary(boardView[k][l])) {
+                            if (i == k || j == l) {
+                                boundaryCounter++;
+                                currentRectangle.setFill(Color.GOLD);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        boundaryCounter /= 2;
+        int avgArea = area / grainIds.size();
+        System.out.println(boundaryCounter);
+        System.out.println(avgArea);
     }
 
     @FXML

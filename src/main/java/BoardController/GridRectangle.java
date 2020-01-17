@@ -42,7 +42,20 @@ public class GridRectangle extends Rectangle {
         GRAIN, INCLUSION, EMPTY
     }
 
+    public Integer getGridId(){
+        return gridId;
+    }
+
+    public boolean isGrain(){
+        return this.cellType == CellType.GRAIN;
+    }
+
     public boolean isProperRectangle(Integer gridId, CellType type) {
         return gridId == this.gridId && cellType == type;
+    }
+
+    public boolean doYouBoundary(GridRectangle gridRectangle) {
+        return (this.cellType != CellType.EMPTY && gridRectangle.cellType != CellType.EMPTY)
+                && (!this.gridId.equals(gridRectangle.gridId) || this.cellType != gridRectangle.cellType);
     }
 }
