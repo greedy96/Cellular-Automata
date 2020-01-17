@@ -62,8 +62,10 @@
                 <Button fx:id="playButton" layoutX="160.0" layoutY="300.0" mnemonicParsing="false" onAction="#playAuto"
                         text="Auto"/>
                 <Button layoutX="40.0" layoutY="300.0" mnemonicParsing="false" onAction="#pauseAuto" text="Pause"/>
-                <Button layoutX="40.0" layoutY="450.0" mnemonicParsing="false" onAction="#goToGrainSelector"
-                        text="Second Grain Growth"/>
+                <Label fx:id="lastBoundaryLength" layoutX="50.0" layoutY="375.0"/>
+                <Label fx:id="meanGrainSize" layoutX="50.0" layoutY="425.0"/>
+                <Button layoutX="50.0" layoutY="500.0" mnemonicParsing="false" onAction="#goToGrainSelector"
+                        text="Second Grain Boundary"/>
                 <Button layoutX="100.0" layoutY="600.0" mnemonicParsing="false" onAction="#resetView" text="Reset"/>
             </AnchorPane>
             <AnchorPane fx:id="selectorPane">

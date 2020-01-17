@@ -11,7 +11,6 @@ import BoardController.board.neighbour.findNeighbour.MooreNeighbourFinder;
 import BoardController.board.neighbour.findNeighbour.NeighbourFinder;
 import BoardController.board.neighbour.findNeighbour.SimpleNeighbourFinder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Random;
 import java.util.Set;
