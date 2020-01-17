@@ -95,7 +95,7 @@ public class BoardController {
                     int y = Integer.parseInt(grainString[2]);
                     int id = Integer.parseInt(grainString[3]);
                     int startStep = Integer.parseInt(grainString[4]);
-                    int phase = Integer.parseInt(boardString[5]);
+                    int phase = Integer.parseInt(grainString[5]);
                     if (phase > currentPhase) {
                         currentPhase = phase;
                     }

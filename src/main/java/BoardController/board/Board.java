@@ -27,7 +27,6 @@ public class Board {
     private NeighbourhoodEnum neighbourhoodEnum;
     private int probability = 100;
     private ProperNeighbour properNeighbour;
-    @Setter
     private int phase = 0;
     int lastGrainId = 0, lastInclusionId = 0;
 
@@ -69,6 +68,13 @@ public class Board {
 
     public void setStep(int step) {
         this.step = step;
+    }
+
+    public void setPhase(int phase) {
+        this.phase = phase;
+        if (this.properNeighbour != null) {
+            this.properNeighbour.setNewPhase(phase);
+        }
     }
 
     public NeighbourhoodEnum getNeighbourhoodEnum() {
