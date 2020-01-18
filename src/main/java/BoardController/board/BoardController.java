@@ -5,6 +5,7 @@ import BoardController.SelectedItem;
 import BoardController.board.cells.Cell;
 import BoardController.board.cells.Grain;
 import BoardController.board.cells.Inclusion;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
@@ -96,19 +97,20 @@ public class BoardController {
                     int id = Integer.parseInt(grainString[3]);
                     int startStep = Integer.parseInt(grainString[4]);
                     int phase = Integer.parseInt(grainString[5]);
+                    boolean isDualPhase = Boolean.parseBoolean(grainString[6]);
                     if (phase > currentPhase) {
                         currentPhase = phase;
                     }
                     if ("G".equals(type)) {
                         if (!colors.containsKey(id)) {
-                            Grain grain = new Grain(id, x, y, startStep, null, neighbourhoodEnum, phase);
+                            Grain grain = new Grain(id, x, y, startStep, null, neighbourhoodEnum, phase, isDualPhase);
                             board.getMatrix()[x][y] = grain;
                             colors.put(grain.getId(), grain.getColor());
                         } else {
-                            board.getMatrix()[x][y] = new Grain(id, x, y, startStep, colors.get(id), neighbourhoodEnum, phase);
+                            board.getMatrix()[x][y] = new Grain(id, x, y, startStep, colors.get(id), neighbourhoodEnum, phase, isDualPhase);
                         }
                     } else if ("I".equals(type)) {
-                        Inclusion inclusion = new Inclusion(id, x, y, startStep, phase);
+                        Inclusion inclusion = new Inclusion(id, x, y, startStep, phase, isDualPhase);
                         board.getMatrix()[x][y] = inclusion;
                     }
                 }
@@ -156,6 +158,8 @@ public class BoardController {
                                 .append(String.valueOf(cell.getStartStep()))
                                 .append(",")
                                 .append(String.valueOf(cell.getCellPhase()))
+                                .append(",")
+                                .append(String.valueOf(cell.isDualPhase()))
                                 .append("\n");
                     }
                 }
@@ -221,11 +225,9 @@ public class BoardController {
         Set<Integer> inclusionsSet =
                 selectedItemList.stream().filter(selectedItem -> !selectedItem.onProperty().get() && selectedItem.getType() == GridRectangle.CellType.INCLUSION)
                         .map(selectedItem -> selectedItem.getId()).collect(Collectors.toSet());
-        this.board.deleteGrains(grainsSet, inclusionsSet);
+        this.board.deleteGrains(grainsSet, inclusionsSet, setDP);
 
-        if (setDP) {
-            this.board.setNextPhase();
-        }
+        this.board.setNextPhase();
 
         this.board.setRandomInclusions(numberOfInclusions, minRadius, maxRadius);
         this.board.setRandomGrains(numberOfSeeds);

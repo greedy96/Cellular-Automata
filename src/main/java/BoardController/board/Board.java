@@ -88,7 +88,7 @@ public class Board {
             x = random.nextInt(rows);
             y = random.nextInt(columns);
             if (matrix[x][y] == null) {
-                matrix[x][y] = new Grain(lastGrainId + i, x, y, step, null, neighbourhoodEnum, phase);
+                matrix[x][y] = new Grain(lastGrainId + i, x, y, step, null, neighbourhoodEnum, phase, false);
                 i++;
             }
         }
@@ -134,7 +134,7 @@ public class Board {
                     radius = minRadius;
                 else
                     radius = random.nextInt(maxRadius - minRadius) + minRadius;
-                fillCircle(new Inclusion(lastInclusionId + i, x, y, step, phase), x, y, radius);
+                fillCircle(new Inclusion(lastInclusionId + i, x, y, step, phase, false), x, y, radius);
                 i++;
             }
         }
@@ -153,7 +153,7 @@ public class Board {
         }
     }
 
-    public void deleteGrains(Set<Integer> grainsIds, Set<Integer> inclusionsIds) {
+    public void deleteGrains(Set<Integer> grainsIds, Set<Integer> inclusionsIds, boolean setDP) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 Cell cell = matrix[i][j];
@@ -161,9 +161,18 @@ public class Board {
                     if (cell instanceof Grain) {
                         if (grainsIds.contains(cell.getId()))
                             matrix[i][j] = null;
+                        else {
+                            if (setDP) {
+                                matrix[i][j].setDualPhase();
+                            }
+                        }
                     } else {
                         if (inclusionsIds.contains(cell.getId())) {
                             matrix[i][j] = null;
+                        } else {
+                            if (setDP) {
+                                matrix[i][j].setDualPhase();
+                            }
                         }
                     }
                 }

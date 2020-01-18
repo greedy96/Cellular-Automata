@@ -210,7 +210,7 @@ public class Controller {
             cellView.setFill(Color.LIGHTGRAY);
         } else {
             Color color = cell.getColor();
-            if (cell.getCellPhase() < this.boardController.getCurrentPhase()) {
+            if (cell.isDualPhase()) {
                 color = mixColor(cell.getColor(), Color.HOTPINK, 25);
             }
             if (cell instanceof Grain) {
@@ -231,7 +231,7 @@ public class Controller {
             if (cell != null) {
                 if (cell.getStartStep() <= currentStep) {
                     Color color = cell.getColor();
-                    if (cell.getCellPhase() < boardController.getCurrentPhase()) {
+                    if (cell.isDualPhase()) {
                         color = mixColor(cell.getColor(), Color.HOTPINK, 25);
                     }
                     gridRectangle.setNewGrid(cell.getId(), cell instanceof Grain ? GridRectangle.CellType.GRAIN :
